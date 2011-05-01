@@ -1,0 +1,82 @@
+Content-type: application/x-multi-tv-program-info; charset=shift_jis
+version: 1
+boundary: XXXBOUNDARYXXX
+multi-program-title: MyEPG 2011-04-29 15:02:29
+
+
+XXXBOUNDARYXXX
+Content-type: application/x-tv-program-info; charset=shift_jis
+version: 1
+station: SPTV606
+year: 2011
+month: 05
+date: 03
+start: 00:50
+end: 01:50
+program-title: [HV]FIA GT1世界選手権 2011 第2戦 ゾルダー(ベルギー)
+genre: 16
+subgenre: 6
+
+【第2戦ゾルダー(ベルギー)】<BR>解説：荒聖治(レーシングドライバー)<BR>実況：中村義昭<BR>開催日：2011年4月10日
+
+XXXBOUNDARYXXX
+Content-type: application/x-tv-program-info; charset=shift_jis
+version: 1
+station: SPTV602
+year: 2011
+month: 05
+date: 03
+start: 17:00
+end: 17:30
+program-title: インサイドWTCC #2
+genre: 16
+subgenre: 6
+
+「クリティバ」<BR>ヨーロッパで大人気の自動車レース　WTCC」の注目の選手情報や選手へのインタビューなどを通じて、レースの舞台裏に迫る！
+
+XXXBOUNDARYXXX
+Content-type: application/x-tv-program-info; charset=shift_jis
+version: 1
+station: SPTV603
+year: 2011
+month: 05
+date: 03
+start: 23:30
+end: 00:30
+program-title: FIA GT1世界選手権 2011 第2戦 ゾルダー(ベルギー)
+genre: 16
+subgenre: 6
+
+【第2戦ゾルダー(ベルギー)】<BR>解説：荒聖治(レーシングドライバー)<BR>実況：中村義昭<BR>開催日：2011年4月10日
+
+XXXBOUNDARYXXX
+Content-type: application/x-tv-program-info; charset=shift_jis
+version: 1
+station: SPTV603
+year: 2011
+month: 05
+date: 04
+start: 01:30
+end: 02:00
+program-title: モータースポーツマガジン MOBIL1 THE GRID 2011 #9
+genre: 16
+subgenre: 6
+
+トップドライバーによる名コースのドライビング解説や、トップチームがレースに挑むまでのドキュメント、決勝レース当日の裏側など、情報満載の30分。
+
+XXXBOUNDARYXXX
+Content-type: application/x-tv-program-info; charset=shift_jis
+version: 1
+station: SPTV604
+year: 2011
+month: 05
+date: 04
+start: 08:30
+end: 09:00
+program-title: モータースポーツマガジン MOBIL1 THE GRID 2011 #9
+genre: 16
+subgenre: 6
+
+トップドライバーによる名コースのドライビング解説や、トップチームがレースに挑むまでのドキュメント、決勝レース当日の裏側など、情報満載の30分。
+
+XXXBOUNDARYXXX--
