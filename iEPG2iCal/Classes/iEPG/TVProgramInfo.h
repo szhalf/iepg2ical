@@ -13,16 +13,16 @@
 @private
     NSCalendar       *calendar;
     NSData           *data;
-    NSDate           *dateTimeEnd;
-    NSDate           *dateTimeStart;
     NSStringEncoding encoding;
+    NSDate           *endDateTime;
     NSNumber         *genre;
     NSString         *memo;
     NSString         *performer;
-    NSString         *programSubtitle;
-    NSString         *programTitle;
+    NSDate           *startDateTime;
     NSString         *station;
     NSNumber         *subGenre;
+    NSString         *subtitle;
+    NSString         *title;
     NSString         *version;
 }
 
@@ -33,14 +33,14 @@
 - (void)parse;
 - (void)parseContentType:(NSString *)value;
 
-@property (nonatomic, retain) NSDate   *dateTimeEnd;
-@property (nonatomic, retain) NSDate   *dateTimeStart;
+@property (nonatomic, retain) NSDate   *endDateTime;
 @property (nonatomic, retain) NSNumber *genre;
 @property (nonatomic, retain) NSString *memo;
 @property (nonatomic, retain) NSString *performer;
-@property (nonatomic, retain) NSString *programSubtitle;
-@property (nonatomic, retain) NSString *programTitle;
+@property (nonatomic, retain) NSDate   *startDateTime;
 @property (nonatomic, retain) NSString *station;
 @property (nonatomic, retain) NSNumber *subGenre;
+@property (nonatomic, retain) NSString *subtitle;
+@property (nonatomic, retain) NSString *title;
 
 @end

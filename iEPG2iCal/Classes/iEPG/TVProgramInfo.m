@@ -13,15 +13,15 @@
 
 static char CRLF[2] = {0xd, 0xa};
 
-@synthesize dateTimeEnd;
-@synthesize dateTimeStart;
+@synthesize endDateTime;
 @synthesize genre;
 @synthesize memo;
 @synthesize performer;
-@synthesize programSubtitle;
-@synthesize programTitle;
+@synthesize startDateTime;
 @synthesize station;
 @synthesize subGenre;
+@synthesize subtitle;
+@synthesize title;
 
 
 #pragma -
@@ -124,10 +124,10 @@ static char CRLF[2] = {0xd, 0xa};
                 [dateComponentsEnd setMinute:minute];
                 
             } else if ([name isCaseInsensitiveLike:@"program-title"]) {
-                self.programTitle = value;
+                self.title = value;
                 
             } else if ([name isCaseInsensitiveLike:@"program-subtitle"]) {
-                self.programSubtitle = value;
+                self.subtitle = value;
                 
             } else if ([name isCaseInsensitiveLike:@"performer"]) {
                 self.performer = value;
@@ -147,10 +147,10 @@ static char CRLF[2] = {0xd, 0xa};
         cursor = range1.location + CRLFData.length;
     }
     
-    self.dateTimeStart = [calendar dateFromComponents:dateComponentsStart];
-    self.dateTimeEnd = [calendar dateFromComponents:dateComponentsEnd];
-    if ([self.dateTimeStart compare:self.dateTimeEnd] == NSOrderedDescending) {
-        self.dateTimeEnd = [self.dateTimeEnd dateByAddingTimeInterval:60 * 60 * 24];
+    self.startDateTime = [calendar dateFromComponents:dateComponentsStart];
+    self.endDateTime = [calendar dateFromComponents:dateComponentsEnd];
+    if ([self.startDateTime compare:self.endDateTime] == NSOrderedDescending) {
+        self.endDateTime = [self.endDateTime dateByAddingTimeInterval:60 * 60 * 24];
     }
 }
 
@@ -183,10 +183,10 @@ static char CRLF[2] = {0xd, 0xa};
     [s appendString:@"{\n"];
     [s appendFormat:@"        version: %@\n", version];
     [s appendFormat:@"        station: %@\n", self.station];
-    [s appendFormat:@"start date time: %@\n", self.dateTimeStart.description];
-    [s appendFormat:@"  end date time: %@\n", self.dateTimeEnd.description];
-    [s appendFormat:@"          title: %@\n", self.programTitle];
-    [s appendFormat:@"       subtitle: %@\n", self.programSubtitle];
+    [s appendFormat:@"start date time: %@\n", self.startDateTime.description];
+    [s appendFormat:@"  end date time: %@\n", self.endDateTime.description];
+    [s appendFormat:@"          title: %@\n", self.title];
+    [s appendFormat:@"       subtitle: %@\n", self.subtitle];
     [s appendFormat:@"      performer: %@\n", self.performer];
     [s appendFormat:@"          genre: %@ - %@\n", self.genre, self.subGenre];
     [s appendFormat:@"           memo: %@\n", self.memo];
@@ -200,29 +200,29 @@ static char CRLF[2] = {0xd, 0xa};
 - (void)dealloc {
     [calendar release];
     [data release];
-    [dateTimeEnd release];
-    [dateTimeStart release];
+    [endDateTime release];
     [genre release];
     [memo release];
     [performer release];
-    [programSubtitle release];
-    [programTitle release];
+    [startDateTime release];
     [station release];
     [subGenre release];
+    [subtitle release];
+    [title release];
     [version release];
     
-    calendar        = nil;
-    data            = nil;
-    dateTimeEnd     = nil;
-    dateTimeStart   = nil;
-    genre           = nil;
-    memo            = nil;
-    performer       = nil;
-    programSubtitle = nil;
-    programTitle    = nil;
-    station         = nil;
-    subGenre        = nil;
-    version         = nil;
+    calendar      = nil;
+    data          = nil;
+    endDateTime   = nil;
+    genre         = nil;
+    memo          = nil;
+    performer     = nil;
+    startDateTime = nil;
+    station       = nil;
+    subGenre      = nil;
+    subtitle      = nil;
+    title         = nil;
+    version       = nil;
     
     [super dealloc];
 }
