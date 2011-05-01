@@ -77,7 +77,7 @@ static char CRLF[2] = {0xd, 0xa};
         }
         
         NSData   *lineData = [sourceData subdataWithRange:NSMakeRange(cursor, range1.location - cursor)];
-        NSString *line     = [[NSString alloc] initWithData:lineData encoding:NSASCIIStringEncoding];
+        NSString *line     = [[[NSString alloc] initWithData:lineData encoding:NSASCIIStringEncoding] autorelease];
         NSRange  range2    = [line rangeOfString:@":"];
         
         if (range2.location != NSNotFound) {
