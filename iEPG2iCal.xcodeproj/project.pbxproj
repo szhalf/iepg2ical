@@ -35,9 +35,7 @@
 		63A395C2136A92660003D49B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		63A395C5136A92660003D49B /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		63A395C8136A92660003D49B /* iEPG2iCal-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iEPG2iCal-Prefix.pch"; sourceTree = "<group>"; };
-		63A395E2136A969E0003D49B /* TVPTI_output.tvpi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TVPTI_output.tvpi; sourceTree = "<group>"; };
 		63A395E7136A9DF20003D49B /* CalendarStore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CalendarStore.framework; path = ../../../../../System/Library/Frameworks/CalendarStore.framework; sourceTree = "<group>"; };
-		63E1EF0B136AD95B00AA8358 /* iepg.tvpi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = iepg.tvpi; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +102,6 @@
 				631EBB4F136AE6FE0015D492 /* Classes */,
 				63A395C5136A92660003D49B /* main.m */,
 				63A395C7136A92660003D49B /* Supporting Files */,
-				63A395E1136A969E0003D49B /* Data */,
 			);
 			path = iEPG2iCal;
 			sourceTree = "<group>";
@@ -115,15 +112,6 @@
 				63A395C8136A92660003D49B /* iEPG2iCal-Prefix.pch */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		63A395E1136A969E0003D49B /* Data */ = {
-			isa = PBXGroup;
-			children = (
-				63E1EF0B136AD95B00AA8358 /* iepg.tvpi */,
-				63A395E2136A969E0003D49B /* TVPTI_output.tvpi */,
-			);
-			path = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -152,7 +140,7 @@
 		63A395B5136A92650003D49B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = 63A395B8136A92650003D49B /* Build configuration list for PBXProject "iEPG2iCal" */;
 			compatibilityVersion = "Xcode 3.2";
