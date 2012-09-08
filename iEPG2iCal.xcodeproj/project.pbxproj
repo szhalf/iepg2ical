@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		63199908136D364D002A2E0D /* iEPG.m in Sources */ = {isa = PBXBuildFile; fileRef = 63199907136D364D002A2E0D /* iEPG.m */; };
+		631CF81D15A98FFD0098DC7A /* CalendarStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 631CF81C15A98FFD0098DC7A /* CalendarStore.framework */; };
 		63656174136D368A00C05994 /* TVProgramInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 63656173136D368A00C05994 /* TVProgramInfo.m */; };
 		63A395C3136A92660003D49B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A395C2136A92660003D49B /* Foundation.framework */; };
 		63A395C6136A92660003D49B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A395C5136A92660003D49B /* main.m */; };
-		63A395E8136A9DF20003D49B /* CalendarStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A395E7136A9DF20003D49B /* CalendarStore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,13 +29,13 @@
 /* Begin PBXFileReference section */
 		63199906136D364D002A2E0D /* iEPG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iEPG.h; path = iEPG/iEPG.h; sourceTree = "<group>"; };
 		63199907136D364D002A2E0D /* iEPG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iEPG.m; path = iEPG/iEPG.m; sourceTree = "<group>"; };
+		631CF81C15A98FFD0098DC7A /* CalendarStore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CalendarStore.framework; path = System/Library/Frameworks/CalendarStore.framework; sourceTree = SDKROOT; };
 		63656172136D368A00C05994 /* TVProgramInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TVProgramInfo.h; path = iEPG/TVProgramInfo.h; sourceTree = "<group>"; };
 		63656173136D368A00C05994 /* TVProgramInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TVProgramInfo.m; path = iEPG/TVProgramInfo.m; sourceTree = "<group>"; };
 		63A395BE136A92660003D49B /* iEPG2iCal */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = iEPG2iCal; sourceTree = BUILT_PRODUCTS_DIR; };
 		63A395C2136A92660003D49B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		63A395C5136A92660003D49B /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		63A395C8136A92660003D49B /* iEPG2iCal-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iEPG2iCal-Prefix.pch"; sourceTree = "<group>"; };
-		63A395E7136A9DF20003D49B /* CalendarStore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CalendarStore.framework; path = ../../../../../System/Library/Frameworks/CalendarStore.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,8 +43,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				631CF81D15A98FFD0098DC7A /* CalendarStore.framework in Frameworks */,
 				63A395C3136A92660003D49B /* Foundation.framework in Frameworks */,
-				63A395E8136A9DF20003D49B /* CalendarStore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,7 +90,7 @@
 		63A395C1136A92660003D49B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				63A395E7136A9DF20003D49B /* CalendarStore.framework */,
+				631CF81C15A98FFD0098DC7A /* CalendarStore.framework */,
 				63A395C2136A92660003D49B /* Foundation.framework */,
 			);
 			name = Frameworks;
