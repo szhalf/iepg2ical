@@ -11,7 +11,7 @@ import Cocoa
 class iEPG {
     let CRLF: NSData = NSData(bytes: "\r\n".UTF8String, length: 2)
 
-    var programInformations: NSMutableArray
+    let programInformations: NSMutableArray
     var sourceData:          NSData
 
     init() {
@@ -19,7 +19,7 @@ class iEPG {
         self.sourceData          = NSData()
     }
 
-    convenience init(path: NSString) {
+    convenience init(let path: NSString) {
         self.init()
 
         self.sourceData = NSData(contentsOfFile: path)
@@ -35,7 +35,7 @@ class iEPG {
 
         var cursor: Int = 0
         while cursor < self.sourceData.length {
-            var range1: NSRange = self.sourceData.rangeOfData(CRLF, options: NSDataSearchOptions(0), range: NSMakeRange(cursor, self.sourceData.length - cursor))
+            let range1: NSRange = self.sourceData.rangeOfData(CRLF, options: NSDataSearchOptions(0), range: NSMakeRange(cursor, self.sourceData.length - cursor))
 
             if range1.location == NSNotFound {
                 break
@@ -46,21 +46,23 @@ class iEPG {
                 break
             }
 
-            var lineData: NSData   = self.sourceData.subdataWithRange(NSMakeRange(cursor, range1.location - cursor))
-            var line:     NSString = NSString(data: lineData, encoding: NSASCIIStringEncoding)
-            var range2:   NSRange  = line.rangeOfString(":")
+            let lineData: NSData   = self.sourceData.subdataWithRange(NSMakeRange(cursor, range1.location - cursor))
+            let line:     NSString = NSString(data: lineData, encoding: NSASCIIStringEncoding)
+            let range2:   NSRange  = line.rangeOfString(":")
 
             if range2.location != NSNotFound {
-                var name:  NSString = line.substringToIndex(range2.location)
-                var value: NSString = line.substringFromIndex(range2.location + range2.length)
+                let name:  NSString = line.substringToIndex(range2.location)
+                let value: NSString = line.substringFromIndex(range2.location + range2.length)
 
                 switch name {
                 case let name where name.isCaseInsensitiveLike("content-type"):
-                    (contentType, encoding) = self.parseContentType(value)
+                    (contentType, encoding) = Utils.parseContentType(value)
+
                 case let name where name.isCaseInsensitiveLike("boundary"):
                     boundary = value.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+
                 default:
-                    continue
+                    break
                 }
             }
             cursor = range1.location + CRLF.length
@@ -73,16 +75,16 @@ class iEPG {
                 return
             }
 
-            var boundaryData: NSMutableData = NSMutableData.dataWithData(CRLF)
+            let boundaryData: NSMutableData = NSMutableData.dataWithData(CRLF)
             boundaryData.appendData(boundary!.dataUsingEncoding(encoding)!)
 
-            var terminatorData: NSMutableData = NSMutableData(data: boundaryData)
+            let terminatorData: NSMutableData = NSMutableData(data: boundaryData)
             terminatorData.appendData(NSString(string: "--").dataUsingEncoding(encoding)!)
 
             while cursor < self.sourceData.length {
-                var range:              NSRange = NSMakeRange(cursor, self.sourceData.length - cursor)
-                var boundaryPosition:   NSRange = self.sourceData.rangeOfData(boundaryData, options:NSDataSearchOptions(0), range:range)
-                var terminatorPosition: NSRange = self.sourceData.rangeOfData(terminatorData, options:NSDataSearchOptions(0), range:range)
+                let range:              NSRange = NSMakeRange(cursor, self.sourceData.length - cursor)
+                let boundaryPosition:   NSRange = self.sourceData.rangeOfData(boundaryData, options:NSDataSearchOptions(0), range:range)
+                let terminatorPosition: NSRange = self.sourceData.rangeOfData(terminatorData, options:NSDataSearchOptions(0), range:range)
 
                 if boundaryPosition.location == NSNotFound {
                     break
@@ -92,7 +94,7 @@ class iEPG {
                     continue
                 }
 
-                var data: NSData = self.sourceData.subdataWithRange(NSMakeRange(cursor, boundaryPosition.location - cursor))
+                let data: NSData = self.sourceData.subdataWithRange(NSMakeRange(cursor, boundaryPosition.location - cursor))
 
                 self.programInformations.addObject(TVProgramInfo(data: data))
 
@@ -104,56 +106,5 @@ class iEPG {
         }
     }
 
-    func parseContentType(value: String) -> (NSString?, NSStringEncoding) {
-        var contentType: NSString?
-        var encoding:    NSStringEncoding = NSASCIIStringEncoding
-
-        let components: NSArray = value.componentsSeparatedByString(";")
-        for var i = 0; i < components.count; i++ {
-            let s: NSString = components.objectAtIndex(i) as NSString
-
-            if i == 0 {
-                contentType = s.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-            } else {
-                let (name, value) = self.splitStringIntoKeyAndValue(s, delimiter: "=")
-
-                switch name {
-                case let name where name.isCaseInsensitiveLike("charset"):
-                    encoding = self.determinCharsetEncoding(value)
-                default:
-                    continue
-                }
-            }
-        }
-
-        return (contentType, encoding)
-    }
-
-    func splitStringIntoKeyAndValue(string: NSString, delimiter: String) -> (NSString, NSString) {
-        var range: NSRange  = string.rangeOfString(delimiter)
-
-        var key:   NSString = string.substringToIndex(range.location)
-        var value: NSString = string.substringFromIndex(range.location + range.length)
-
-        key   = key.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-        value = value.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-
-        return (key, value)
-    }
-
-    func determinCharsetEncoding(string: NSString) -> (NSStringEncoding) {
-        var encoding: NSStringEncoding
-
-        switch string {
-        case let value where value.isCaseInsensitiveLike("UTF-8"):
-            encoding = NSUTF8StringEncoding
-        case let value where value.isCaseInsensitiveLike("Shift_JIS"):
-            encoding = NSShiftJISStringEncoding
-        default:
-            encoding = NSASCIIStringEncoding
-        }
-
-        return encoding
-    }
 }
 
