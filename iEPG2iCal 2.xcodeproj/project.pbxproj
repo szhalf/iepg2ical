@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		635F8E92198E395D0017510E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635F8E91198E395D0017510E /* main.swift */; };
+		639C1F4E19B77102005739AC /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639C1F4D19B77102005739AC /* Utils.swift */; };
+		63ADF22619B7392B000DED0F /* iEPG.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635F8E98198E3BDA0017510E /* iEPG.swift */; };
+		63ADF22719B7392B000DED0F /* TVProgramInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635F8E9A198E7F470017510E /* TVProgramInfo.swift */; };
+		63ADF22819B7392B000DED0F /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635F8E91198E395D0017510E /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +28,9 @@
 /* Begin PBXFileReference section */
 		635F8E8E198E395D0017510E /* iEPG2iCal 2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "iEPG2iCal 2"; sourceTree = BUILT_PRODUCTS_DIR; };
 		635F8E91198E395D0017510E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		635F8E98198E3BDA0017510E /* iEPG.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iEPG.swift; sourceTree = "<group>"; };
+		635F8E9A198E7F470017510E /* TVProgramInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TVProgramInfo.swift; sourceTree = "<group>"; };
+		639C1F4D19B77102005739AC /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +63,28 @@
 		635F8E90198E395D0017510E /* iEPG2iCal 2 */ = {
 			isa = PBXGroup;
 			children = (
+				635F8E9D198E96770017510E /* Classes */,
 				635F8E91198E395D0017510E /* main.swift */,
 			);
 			path = "iEPG2iCal 2";
+			sourceTree = "<group>";
+		};
+		635F8E9C198E96660017510E /* iEPG */ = {
+			isa = PBXGroup;
+			children = (
+				635F8E98198E3BDA0017510E /* iEPG.swift */,
+				635F8E9A198E7F470017510E /* TVProgramInfo.swift */,
+				639C1F4D19B77102005739AC /* Utils.swift */,
+			);
+			path = iEPG;
+			sourceTree = "<group>";
+		};
+		635F8E9D198E96770017510E /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				635F8E9C198E96660017510E /* iEPG */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -118,7 +143,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				635F8E92198E395D0017510E /* main.swift in Sources */,
+				63ADF22619B7392B000DED0F /* iEPG.swift in Sources */,
+				63ADF22719B7392B000DED0F /* TVProgramInfo.swift in Sources */,
+				63ADF22819B7392B000DED0F /* main.swift in Sources */,
+				639C1F4E19B77102005739AC /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +261,7 @@
 				635F8E97198E395D0017510E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
