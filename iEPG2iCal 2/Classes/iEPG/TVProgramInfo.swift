@@ -26,7 +26,7 @@ class TVProgramInfo {
     var version:       NSString?
 
     init(let data: NSData) {
-        self.calendar = NSCalendar(calendarIdentifier: NSGregorianCalendar)
+        self.calendar = NSCalendar(calendarIdentifier: NSGregorianCalendar)!
         self.encoding = NSASCIIStringEncoding
         self.data     = data
 
@@ -52,7 +52,7 @@ class TVProgramInfo {
 
             if (!headerPartEnds) {
                 let lineData: NSData   = self.data!.subdataWithRange(NSMakeRange(cursor, range1.location - cursor))
-                let line:     NSString = NSString(data: lineData, encoding: encoding)
+                let line:     NSString = NSString(data: lineData, encoding: encoding)!
                 let range2:   NSRange  = line.rangeOfString(":")
 
                 let name:  NSString = line.substringToIndex(range2.location).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())

@@ -22,7 +22,7 @@ class iEPG {
     convenience init(let path: NSString) {
         self.init()
 
-        self.sourceData = NSData(contentsOfFile: path)
+        self.sourceData = NSData(contentsOfFile: path)!
 
         self.parse()
     }
@@ -47,7 +47,7 @@ class iEPG {
             }
 
             let lineData: NSData   = self.sourceData.subdataWithRange(NSMakeRange(cursor, range1.location - cursor))
-            let line:     NSString = NSString(data: lineData, encoding: NSASCIIStringEncoding)
+            let line:     NSString = NSString(data: lineData, encoding: NSASCIIStringEncoding)!
             let range2:   NSRange  = line.rangeOfString(":")
 
             if range2.location != NSNotFound {
@@ -75,7 +75,7 @@ class iEPG {
                 return
             }
 
-            let boundaryData: NSMutableData = NSMutableData.dataWithData(CRLF)
+            let boundaryData: NSMutableData = NSMutableData(data: CRLF)
             boundaryData.appendData(boundary!.dataUsingEncoding(encoding)!)
 
             let terminatorData: NSMutableData = NSMutableData(data: boundaryData)
