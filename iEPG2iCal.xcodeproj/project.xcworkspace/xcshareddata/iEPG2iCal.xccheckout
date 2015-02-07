@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B55EF26F-3FE5-48D3-94A9-87179E48F0E2</string>
+	<key>IDESourceControlProjectName</key>
+	<string>iEPG2iCal</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>43B157CAAB95CE0FEA0A621CC3FE332D20E16EF4</key>
+		<string>ssh://bitbucket.org/szhalf/iepg2ical.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>iEPG2iCal.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>43B157CAAB95CE0FEA0A621CC3FE332D20E16EF4</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://bitbucket.org/szhalf/iepg2ical.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>43B157CAAB95CE0FEA0A621CC3FE332D20E16EF4</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>43B157CAAB95CE0FEA0A621CC3FE332D20E16EF4</string>
+			<key>IDESourceControlWCCName</key>
+			<string>iEPG2iCal</string>
+		</dict>
+	</array>
+</dict>
+</plist>
