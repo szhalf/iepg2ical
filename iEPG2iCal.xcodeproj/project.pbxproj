@@ -12,10 +12,23 @@
 		63656174136D368A00C05994 /* TVProgramInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 63656173136D368A00C05994 /* TVProgramInfo.m */; };
 		63A395C3136A92660003D49B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A395C2136A92660003D49B /* Foundation.framework */; };
 		63A395C6136A92660003D49B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A395C5136A92660003D49B /* main.m */; };
+		63D90DBD1A8E32DC00826937 /* iEPG.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D90DAB1A8E321800826937 /* iEPG.swift */; };
+		63D90DBE1A8E32E000826937 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D90DB11A8E322100826937 /* main.swift */; };
+		63D90DBF1A8E32FD00826937 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D90DAD1A8E321800826937 /* Utils.swift */; };
+		63D90DC01A8E330100826937 /* TVProgramInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D90DAC1A8E321800826937 /* TVProgramInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		63A395BC136A92660003D49B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		63D90DB41A8E329800826937 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -36,6 +49,11 @@
 		63A395C2136A92660003D49B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		63A395C5136A92660003D49B /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		63A395C8136A92660003D49B /* iEPG2iCal-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iEPG2iCal-Prefix.pch"; sourceTree = "<group>"; };
+		63D90DAB1A8E321800826937 /* iEPG.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iEPG.swift; sourceTree = "<group>"; };
+		63D90DAC1A8E321800826937 /* TVProgramInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TVProgramInfo.swift; sourceTree = "<group>"; };
+		63D90DAD1A8E321800826937 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		63D90DB11A8E322100826937 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		63D90DB61A8E329800826937 /* iEPG2iCal-2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "iEPG2iCal-2"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +63,13 @@
 			files = (
 				631CF81D15A98FFD0098DC7A /* CalendarStore.framework in Frameworks */,
 				63A395C3136A92660003D49B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		63D90DB31A8E329800826937 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				63A395C4136A92660003D49B /* iEPG2iCal */,
+				63D90DB71A8E329800826937 /* iEPG2iCal-2 */,
 				63A395C1136A92660003D49B /* Frameworks */,
 				63A395BF136A92660003D49B /* Products */,
 			);
@@ -83,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				63A395BE136A92660003D49B /* iEPG2iCal */,
+				63D90DB61A8E329800826937 /* iEPG2iCal-2 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -114,6 +141,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		63D90DB71A8E329800826937 /* iEPG2iCal-2 */ = {
+			isa = PBXGroup;
+			children = (
+				63D90DB11A8E322100826937 /* main.swift */,
+				63D90DAB1A8E321800826937 /* iEPG.swift */,
+				63D90DAC1A8E321800826937 /* TVProgramInfo.swift */,
+				63D90DAD1A8E321800826937 /* Utils.swift */,
+			);
+			path = "iEPG2iCal-2";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -134,6 +172,23 @@
 			productReference = 63A395BE136A92660003D49B /* iEPG2iCal */;
 			productType = "com.apple.product-type.tool";
 		};
+		63D90DB51A8E329800826937 /* iEPG2iCal-2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 63D90DBA1A8E329800826937 /* Build configuration list for PBXNativeTarget "iEPG2iCal-2" */;
+			buildPhases = (
+				63D90DB21A8E329800826937 /* Sources */,
+				63D90DB31A8E329800826937 /* Frameworks */,
+				63D90DB41A8E329800826937 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "iEPG2iCal-2";
+			productName = "iEPG2iCal-2";
+			productReference = 63D90DB61A8E329800826937 /* iEPG2iCal-2 */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -141,6 +196,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0600;
+				TargetAttributes = {
+					63D90DB51A8E329800826937 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
 			};
 			buildConfigurationList = 63A395B8136A92650003D49B /* Build configuration list for PBXProject "iEPG2iCal" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -155,6 +215,7 @@
 			projectRoot = "";
 			targets = (
 				63A395BD136A92660003D49B /* iEPG2iCal */,
+				63D90DB51A8E329800826937 /* iEPG2iCal-2 */,
 			);
 		};
 /* End PBXProject section */
@@ -167,6 +228,17 @@
 				63A395C6136A92660003D49B /* main.m in Sources */,
 				63199908136D364D002A2E0D /* iEPG.m in Sources */,
 				63656174136D368A00C05994 /* TVProgramInfo.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		63D90DB21A8E329800826937 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63D90DC01A8E330100826937 /* TVProgramInfo.swift in Sources */,
+				63D90DBE1A8E32E000826937 /* main.swift in Sources */,
+				63D90DBD1A8E32DC00826937 /* iEPG.swift in Sources */,
+				63D90DBF1A8E32FD00826937 /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,12 +301,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iEPG2iCal/iEPG2iCal-Prefix.pch";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -242,11 +317,59 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "iEPG2iCal/iEPG2iCal-Prefix.pch";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		63D90DBB1A8E329800826937 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		63D90DBC1A8E329800826937 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -271,6 +394,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
+		};
+		63D90DBA1A8E329800826937 /* Build configuration list for PBXNativeTarget "iEPG2iCal-2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63D90DBB1A8E329800826937 /* Debug */,
+				63D90DBC1A8E329800826937 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
