@@ -27,38 +27,38 @@ class Utils {
         return encoding
     }
 
-    class func parseContentType(let string: String) -> (NSString?, NSStringEncoding) {
-        var contentType: NSString?
+    class func parseContentType(let string: String) -> (String?, NSStringEncoding) {
+        var contentType: String?
         var encoding:    NSStringEncoding = NSASCIIStringEncoding
 
-        let components: NSArray = string.componentsSeparatedByString(";")
+        let components: [String] = string.componentsSeparatedByString(";")
         for var i = 0; i < components.count; i++ {
-            let s: NSString = components.objectAtIndex(i) as NSString
+            let s: String = components[i]
 
             if i == 0 {
                 contentType = s.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
             } else {
                 let (name, value) = Utils.splitStringIntoKeyAndValue(s, delimiter: "=")
 
-                switch name {
-                case let name where name.isCaseInsensitiveLike("charset"):
+                if (name as NSString).lowercaseString == "charset" {
                     encoding = Utils.determinCharsetEncoding(value)
-
-                default:
-                    break
                 }
             }
         }
-        
+
         return (contentType, encoding)
     }
-    
-    class func splitStringIntoKeyAndValue(let string: NSString, let delimiter: String) -> (NSString, NSString) {
-        let range: NSRange  = string.rangeOfString(delimiter)
 
-        let key:   NSString = string.substringToIndex(range.location).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-        let value: NSString = string.substringFromIndex(range.location + range.length).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+    class func splitStringIntoKeyAndValue(let string: String, let delimiter: String) -> (String, String) {
+        var key:   String = ""
+        var value: String = ""
 
+        let range: Range? = string.rangeOfString(delimiter)
+        if range != nil {
+            key = string.substringToIndex(range!.startIndex).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+            value = string.substringFromIndex(range!.endIndex).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        }
+        
         return (key, value)
     }
     

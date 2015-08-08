@@ -9,47 +9,47 @@
 import Foundation
 import EventKit
 
-let stationNumbers: NSDictionary = NSDictionary(objectsAndKeys:
-    "1", "ＮＨＫ総合",
-    "2", "ＮＨＫ教育",
-    "4", "日本テレビ",
-    "5", "テレビ朝日",
-    "6", "ＴＢＳテレビ",
-    "7", "テレビ東京",
-    "8", "フジテレビ",
-    "9", "ＭＸテレビ"
-)
+let stationNumbers = [
+    "ＮＨＫ総合": "1",
+    "2": "ＮＨＫ教育",
+    "4": "日本テレビ",
+    "5": "テレビ朝日",
+    "6": "ＴＢＳテレビ",
+    "7": "テレビ東京",
+    "8": "フジテレビ",
+    "9": "ＭＸテレビ"
+]
 
-var filePaths:   NSMutableArray = [];
-var searchPath:  NSString       = "~/Downloads".stringByExpandingTildeInPath;
-var outputName:  NSString?;
-var outputArray: NSArray?;
+var filePaths:   [String] = [];
+var outputName:  NSString?
+var outputArray: NSArray?
 
-searchPath.completePathIntoString(&outputName, caseSensitive: Bool(false), matchesIntoArray: &outputArray, filterTypes: NSArray(objects: "tvpi"))
+var searchPath:  NSString  = ("~/Downloads" as NSString).stringByExpandingTildeInPath;
+searchPath.completePathIntoString(&outputName, caseSensitive: Bool(false), matchesIntoArray: &outputArray, filterTypes: ["tvpi"])
 
-for path in outputArray! {
+for path in outputArray as! [String] {
     var pathExtention = NSString(string: (path as NSString).pathExtension);
     if pathExtention.isCaseInsensitiveLike("tvpi") {
-        filePaths.addObject(path);
+        filePaths.append(path);
     }
 }
 
 if (filePaths.count == 0) {
-    println("no iEPG files found");
+    print("no iEPG files found");
     exit(1);
 }
 
-var authorizationStatus: EKAuthorizationStatus = EKEventStore.authorizationStatusForEntityType(EKEntityMaskEvent)
+var authorizationStatus: EKAuthorizationStatus = EKEventStore.authorizationStatusForEntityType(EKEntityMask.Event)
 
 switch authorizationStatus {
 case .Authorized:
-    println("authorized")
+    print("authorized")
 case .NotDetermined:
-    println("not determined")
+    print("not determined")
 case .Restricted:
-    println("restricted")
+    print("restricted")
 case .Denied:
-    println("denied")
+    print("denied")
 }
 
 var eventStore: EKEventStore = EKEventStore()
@@ -57,7 +57,7 @@ var eventStore: EKEventStore = EKEventStore()
 //    println(123123)
 //    })
 
-var calendars = eventStore.calendarsForEntityType(EKEntityTypeEvent)
+var calendars = eventStore.calendarsForEntityType(EKEntityType.Event)
 
 var calendar: EKCalendar;
 for c in calendars {
@@ -67,28 +67,31 @@ for c in calendars {
     }
 }
 
-var programs: NSMutableArray = [];
+var programs: [TVProgramInfo] = [];
 for path in filePaths {
-    var iepg1: iEPG = iEPG(path: path as NSString)
-    programs.addObject(iepg1.programInformations)
+    var iepg1: iEPG = iEPG(path: path)
+    programs + iepg1.programInformations
 }
 
-for p in programs {
-    var program = p as TVProgramInfo
-    var programStation: NSString? = program.station
+for program in programs {
+    var station: String? = program.station
+    var memo = program.memo
 
-    programStation = programStation?.stringByReplacingOccurrencesOfString("SPTV", withString:"CS")
-    programStation = programStation?.stringByReplacingOccurrencesOfString("BSDT", withString:"BS")
-    if stationNumbers.objectForKey(programStation!) != nil {
-        programStation = stationNumbers.objectForKey(programStation!) as NSString?;
+    if station != nil {
+        station = station!.stringByReplacingOccurrencesOfString("SPTV", withString:"CS")
+        station = station!.stringByReplacingOccurrencesOfString("BSDT", withString:"BS")
+        if stationNumbers[station!] != nil {
+            station = stationNumbers[station!];
+        }
     }
 
-    //var memo: NSString? = program.memo;
-    //memo = memo.stringByReplacingOccurrencesOfString("<BR>", withString:"\r\n", options: NSCaseInsensitiveSearch(range:NSMakeRange(0, program.memo.length)));
+    if memo != nil {
+        memo = memo!.stringByReplacingOccurrencesOfString("<BR>", withString:"\r\n", options: NSStringCompareOptions.CaseInsensitiveSearch);
+    }
 
 //    CalEvent *event = [CalEvent event];
 //    event.calendar  = calendar;
-//    event.title     = [NSString stringWithFormat:@"[%@] %@", programStation, program.title];
+//    event.title     = [NSString stringWithFormat:@"[%@] %@", station, program.title];
 //    event.startDate = program.startDateTime;
 //    event.endDate   = program.endDateTime;
 //    event.notes     = memo;

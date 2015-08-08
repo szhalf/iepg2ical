@@ -15,18 +15,18 @@ class TVProgramInfo {
     var data:          NSData?
     var encoding:      NSStringEncoding
     var endDateTime:   NSDate?
-    var genre:         NSNumber?
-    var memo:          NSString?
-    var performer:     NSString?
+    var genre:         Int?
+    var memo:          String?
+    var performer:     String?
     var startDateTime: NSDate?
-    var station:       NSString?
-    var subGenre:      NSNumber?
-    var subtitle:      NSString?
-    var title:         NSString?
-    var version:       NSString?
+    var station:       String?
+    var subGenre:      Int?
+    var subtitle:      String?
+    var title:         String?
+    var version:       String?
 
     init(let data: NSData) {
-        self.calendar = NSCalendar(calendarIdentifier: NSGregorianCalendar)!
+        self.calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
         self.encoding = NSASCIIStringEncoding
         self.data     = data
 
@@ -34,15 +34,19 @@ class TVProgramInfo {
     }
 
     func parse() {
-        let calendarUnitFlags: NSCalendarUnit = .YearCalendarUnit | .MonthCalendarUnit | .DayCalendarUnit
+        var calendarUnitFlags: NSCalendarUnit = NSCalendarUnit()
+        calendarUnitFlags.insert(NSCalendarUnit.Year)
+        calendarUnitFlags.insert(NSCalendarUnit.Month)
+        calendarUnitFlags.insert(NSCalendarUnit.Day)
 
-        let dateComponentsStart: NSDateComponents = self.calendar.components(calendarUnitFlags, fromDate: NSDate())
-        let dateComponentsEnd:   NSDateComponents = self.calendar.components(calendarUnitFlags, fromDate: NSDate())
+        let now = NSDate()
+        let dateComponentsStart: NSDateComponents = self.calendar.components(calendarUnitFlags, fromDate: now)
+        let dateComponentsEnd:   NSDateComponents = self.calendar.components(calendarUnitFlags, fromDate: now)
 
         var headerPartEnds: Bool = false
         var cursor:         Int  = 0
         while cursor < self.data?.length {
-            let range1: NSRange = self.data!.rangeOfData(CRLF, options:NSDataSearchOptions(0), range:NSMakeRange(cursor, self.data!.length - cursor))
+            let range1: NSRange = self.data!.rangeOfData(CRLF, options:NSDataSearchOptions(rawValue: 0), range:NSMakeRange(cursor, self.data!.length - cursor))
 
             if range1.location == NSNotFound {
                 break
@@ -51,63 +55,61 @@ class TVProgramInfo {
             headerPartEnds = cursor == range1.location
 
             if (!headerPartEnds) {
-                let lineData: NSData   = self.data!.subdataWithRange(NSMakeRange(cursor, range1.location - cursor))
-                let line:     NSString = NSString(data: lineData, encoding: encoding)!
-                let range2:   NSRange  = line.rangeOfString(":")
+                let lineData: NSData = self.data!.subdataWithRange(NSMakeRange(cursor, range1.location - cursor))
+                let line:     String = NSString(data: lineData, encoding: encoding)! as String
 
-                let name:  NSString = line.substringToIndex(range2.location).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-                let value: NSString = line.substringFromIndex(range2.location + range2.length).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+                let (name, value) = Utils.splitStringIntoKeyAndValue(line, delimiter: ":")
 
-                switch name {
-                case let name where name.isCaseInsensitiveLike("content-type"):
-                    (_, self.encoding) = Utils.parseContentType(value)
+                switch name.lowercaseString {
+                case "content-type":
+                    (_, self.encoding) = Utils.parseContentType(value as String)
 
-                case let name where name .isCaseInsensitiveLike("version"):
-
+                case "version":
                     self.version = value
-                case let name where name.isCaseInsensitiveLike("station"):
+
+                case "station":
                     self.station = value
 
-                case let name where name.isCaseInsensitiveLike("year"):
-                    dateComponentsStart.setValue(value.integerValue, forComponent: NSCalendarUnit.YearCalendarUnit)
-                    dateComponentsEnd.setValue(value.integerValue, forComponent: NSCalendarUnit.YearCalendarUnit)
+                case "year":
+                    dateComponentsStart.setValue(Int(value)!, forComponent: NSCalendarUnit.Year)
+                    dateComponentsEnd.setValue(Int(value)!, forComponent: NSCalendarUnit.Year)
 
-                case let name where name.isCaseInsensitiveLike("month"):
-                    dateComponentsStart.setValue(value.integerValue, forComponent: NSCalendarUnit.MonthCalendarUnit)
-                    dateComponentsEnd.setValue(value.integerValue, forComponent: NSCalendarUnit.MonthCalendarUnit)
+                case "month":
+                    dateComponentsStart.setValue(Int(value)!, forComponent: NSCalendarUnit.Month)
+                    dateComponentsEnd.setValue(Int(value)!, forComponent: NSCalendarUnit.Month)
 
-                case let name where name.isCaseInsensitiveLike("date"):
-                    dateComponentsStart.setValue(value.integerValue, forComponent: NSCalendarUnit.DayCalendarUnit)
-                    dateComponentsEnd.setValue(value.integerValue, forComponent: NSCalendarUnit.DayCalendarUnit)
+                case "date":
+                    dateComponentsStart.setValue(Int(value)!, forComponent: NSCalendarUnit.Day)
+                    dateComponentsEnd.setValue(Int(value)!, forComponent: NSCalendarUnit.Day)
 
-                case let name where name.isCaseInsensitiveLike("start"):
-                    self.setTime(value, dateComponents: dateComponentsStart)
+                case "start":
+                    self.setTime(value as String, dateComponents: dateComponentsStart)
 
-                case let name where name.isCaseInsensitiveLike("end"):
-                    self.setTime(value, dateComponents: dateComponentsEnd)
+                case "end":
+                    self.setTime(value as String, dateComponents: dateComponentsEnd)
 
-                case let name where name.isCaseInsensitiveLike("program-title"):
+                case "program-title":
                     self.title = value
 
-                case let name where name.isCaseInsensitiveLike("program-subtitle"):
+                case "program-subtitle":
                     self.subtitle = value
 
-                case let name where name.isCaseInsensitiveLike("performer"):
+                case "performer":
                     self.performer = value
 
-                case let name where name.isCaseInsensitiveLike("genre"):
-                    self.genre = NSNumber(integer: value.integerValue)
-                    
-                case let name where name.isCaseInsensitiveLike("subgenre"):
-                    self.subGenre = NSNumber(integer: value.integerValue)
-                    
+                case "genre":
+                    self.genre = Int(value)!
+
+                case "subgenre":
+                    self.subGenre = Int(value)!
+
                 default:
                     break
                 }
-                
+
             } else {
                 cursor += CRLF.length
-                self.memo = NSString(data: self.data!.subdataWithRange(NSMakeRange(cursor, self.data!.length - cursor)), encoding: self.encoding)
+                self.memo = NSString(data: self.data!.subdataWithRange(NSMakeRange(cursor, self.data!.length - cursor)), encoding: self.encoding) as String?
                 break
             }
             cursor = range1.location + CRLF.length
@@ -122,18 +124,18 @@ class TVProgramInfo {
     }
 
     func setTime(let string: String, let dateComponents: NSDateComponents) {
-        let array: NSArray = string.componentsSeparatedByString(":")
+        let array: [String] = string.componentsSeparatedByString(":")
 
-        var hour:   Int = array.objectAtIndex(0).integerValue
-        var minute: Int = array.objectAtIndex(1).integerValue
+        var hour:   Int = Int(array[0])!
+        let minute: Int = Int(array[1])!
 
         if (hour > 24) {
-            dateComponents.setValue(dateComponents.day + 1, forComponent: NSCalendarUnit.DayCalendarUnit)
+            dateComponents.setValue(dateComponents.day + 1, forComponent: NSCalendarUnit.Day)
             hour -= 24
         }
 
-        dateComponents.setValue(hour, forComponent: NSCalendarUnit.HourCalendarUnit)
-        dateComponents.setValue(minute, forComponent: NSCalendarUnit.MinuteCalendarUnit)
+        dateComponents.setValue(hour, forComponent: NSCalendarUnit.Hour)
+        dateComponents.setValue(minute, forComponent: NSCalendarUnit.Minute)
     }
-
+    
 }
