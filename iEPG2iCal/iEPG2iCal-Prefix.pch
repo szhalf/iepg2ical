@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'iEPG2iCal' target in the 'iEPG2iCal' project
-//
-
-#ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-#endif
