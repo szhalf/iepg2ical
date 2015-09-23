@@ -6,36 +6,35 @@
 //  Copyright (c) 2014 sz50.com. All rights reserved.
 //
 
-import Cocoa
+import Foundation
 
 class iEPG {
-    let CRLF: NSData = NSData(bytes: "\r\n".UTF8String, length: 2)
-
     var programInformations: [TVProgramInfo]
-    var sourceData:          NSData
 
-    init() {
-        self.programInformations = []
-        self.sourceData          = NSData()
+    private let CRLF: NSData = NSData(bytes: "\r\n".UTF8String, length: 2)
+
+    private var _data: NSData
+
+    init(data: NSData) throws {
+        programInformations = []
+        _data               = data
+
+        try self.parse()
     }
 
-    convenience init(let path: String) {
-        self.init()
-
-        self.sourceData = NSData(contentsOfFile: path)!
-
-        self.parse()
+    convenience init(let path: String) throws {
+        try self.init(data: NSData(contentsOfFile: path)!)
     }
 
-    func parse() {
+    private func parse() throws {
         // searching content mime type and boundary
         var contentType: String?
         var encoding:    NSStringEncoding = NSASCIIStringEncoding
         var boundary:    String?
 
         var cursor: Int = 0
-        while cursor < self.sourceData.length {
-            let range1: NSRange = self.sourceData.rangeOfData(CRLF, options: NSDataSearchOptions(rawValue: 0), range: NSMakeRange(cursor, self.sourceData.length - cursor))
+        while cursor < self._data.length {
+            let range1: NSRange = self._data.rangeOfData(CRLF, options: NSDataSearchOptions(rawValue: 0), range: NSMakeRange(cursor, self._data.length - cursor))
 
             if range1.location == NSNotFound {
                 break
@@ -46,7 +45,7 @@ class iEPG {
                 break
             }
 
-            let lineData: NSData = self.sourceData.subdataWithRange(NSMakeRange(cursor, range1.location - cursor))
+            let lineData: NSData = self._data.subdataWithRange(NSMakeRange(cursor, range1.location - cursor))
             let line:     String = NSString(data: lineData, encoding: NSASCIIStringEncoding)! as String
 
             let (name, value) = Utils.splitStringIntoKeyAndValue(line, delimiter: ":")
@@ -65,9 +64,9 @@ class iEPG {
             cursor = range1.location + CRLF.length
         }
 
-        if (contentType as NSString!).isCaseInsensitiveLike("application/x-tv-program-info") {
-            self.programInformations.append(TVProgramInfo(data: self.sourceData))
-        } else if (contentType as NSString!).isCaseInsensitiveLike("application/x-multi-tv-program-info") {
+        if contentType?.lowercaseString == "application/x-tv-program-info" {
+            try self.programInformations.append(TVProgramInfo(data: self._data))
+        } else if contentType?.lowercaseString == "application/x-multi-tv-program-info" {
             if boundary == nil {
                 return
             }
@@ -78,10 +77,10 @@ class iEPG {
             let terminatorData: NSMutableData = NSMutableData(data: boundaryData)
             terminatorData.appendData(NSString(string: "--").dataUsingEncoding(encoding)!)
 
-            while cursor < self.sourceData.length {
-                let range:              NSRange = NSMakeRange(cursor, self.sourceData.length - cursor)
-                let boundaryPosition:   NSRange = self.sourceData.rangeOfData(boundaryData, options:NSDataSearchOptions(rawValue: 0), range:range)
-                let terminatorPosition: NSRange = self.sourceData.rangeOfData(terminatorData, options:NSDataSearchOptions(rawValue: 0), range:range)
+            while cursor < self._data.length {
+                let range:              NSRange = NSMakeRange(cursor, self._data.length - cursor)
+                let boundaryPosition:   NSRange = self._data.rangeOfData(boundaryData, options:NSDataSearchOptions(rawValue: 0), range:range)
+                let terminatorPosition: NSRange = self._data.rangeOfData(terminatorData, options:NSDataSearchOptions(rawValue: 0), range:range)
 
                 if boundaryPosition.location == NSNotFound {
                     break
@@ -91,9 +90,9 @@ class iEPG {
                     continue
                 }
 
-                let data: NSData = self.sourceData.subdataWithRange(NSMakeRange(cursor, boundaryPosition.location - cursor))
+                let data: NSData = self._data.subdataWithRange(NSMakeRange(cursor, boundaryPosition.location - cursor))
 
-                self.programInformations.append(TVProgramInfo(data: data))
+                try self.programInformations.append(TVProgramInfo(data: data))
 
                 if boundaryPosition.location == terminatorPosition.location {
                     break

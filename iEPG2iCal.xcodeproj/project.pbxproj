@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		63530F1C1BB2C78500CFD286 /* Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63530F1B1BB2C78500CFD286 /* Converter.swift */; settings = {ASSET_TAGS = (); }; };
 		63A8967B1BB291BB0001CF86 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A8967A1BB291BB0001CF86 /* main.swift */; };
 		63A896851BB292120001CF86 /* iEPG.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A896821BB291E40001CF86 /* iEPG.swift */; };
 		63A896861BB292140001CF86 /* TVProgramInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A896831BB291E40001CF86 /* TVProgramInfo.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		63530F1B1BB2C78500CFD286 /* Converter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Converter.swift; sourceTree = "<group>"; };
 		63A896771BB291BB0001CF86 /* iEPG2iCal */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = iEPG2iCal; sourceTree = BUILT_PRODUCTS_DIR; };
 		63A8967A1BB291BB0001CF86 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		63A896821BB291E40001CF86 /* iEPG.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iEPG.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				63A896821BB291E40001CF86 /* iEPG.swift */,
 				63A896831BB291E40001CF86 /* TVProgramInfo.swift */,
 				63A896841BB291E40001CF86 /* Utils.swift */,
+				63530F1B1BB2C78500CFD286 /* Converter.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -139,6 +142,7 @@
 				63A896851BB292120001CF86 /* iEPG.swift in Sources */,
 				63A896861BB292140001CF86 /* TVProgramInfo.swift in Sources */,
 				63A896871BB292160001CF86 /* Utils.swift in Sources */,
+				63530F1C1BB2C78500CFD286 /* Converter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +260,7 @@
 				63A896801BB291BB0001CF86 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

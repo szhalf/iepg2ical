@@ -9,7 +9,8 @@
 import Foundation
 import EventKit
 
-let stationNumbers = [
+let calendarName      = "TV/Check"
+let stationReplaceMap = [
     "ＮＨＫ総合"   : "1",
     "ＮＨＫ教育"   : "2",
     "日本テレビ"   : "4",
@@ -18,7 +19,9 @@ let stationNumbers = [
     "テレビ東京"   : "7",
     "フジテレビ"   : "8",
     "ＭＸテレビ"   : "9",
-    "ＮＨＫ衛星第一": "BS101"
+    "ＮＨＫ衛星第一": "BS101",
+    "SPTV"       : "CS",
+    "BSDT"       : "BS"
 ]
 
 var filePaths:   [String] = []
@@ -62,62 +65,32 @@ case .Denied:
 
 }
 
-var calid: String! = nil
+var calendarIdentifier: String! = nil
 for var c: EKCalendar in eventStore.calendarsForEntityType(EKEntityType.Event) {
-    if c.title == "Check" {
-        calid = c.calendarIdentifier
+    if c.title == calendarName {
+        calendarIdentifier = c.calendarIdentifier
         break
     }
 }
 
-var c: EKCalendar? = eventStore.calendarWithIdentifier(calid)
-if (c == nil) {
+var calendar: EKCalendar? = eventStore.calendarWithIdentifier(calendarIdentifier)
+if (calendar == nil) {
     print("Calendar was not found")
     exit(1)
 }
-var calendar: EKCalendar = c!
 
-var programs: [TVProgramInfo] = []
+var iepgs: [iEPG] = []
 for path in filePaths {
-    var iepg: iEPG = iEPG(path: path)
-
-    programs = programs + iepg.programInformations
+    iepgs.append(try iEPG(path: path))
 }
 
-for program in programs {
-    var station: String = program.station != nil ? program.station! : "???"
-    var memo:    String = program.memo != nil ? program.memo! : ""
+let converter = Converter(withEventStore: eventStore)
+converter.stationReplaceMap        = stationReplaceMap
+converter.defaultEventAvailability = EKEventAvailability.Free
 
-    station = station.stringByReplacingOccurrencesOfString("SPTV", withString:"CS")
-    station = station.stringByReplacingOccurrencesOfString("BSDT", withString:"BS")
-    if stationNumbers[station] != nil {
-        station = stationNumbers[station] != nil ? stationNumbers[station]! : "???"
-    }
-
-    memo = memo.stringByReplacingOccurrencesOfString("<BR>", withString:"\r\n", options: NSStringCompareOptions.CaseInsensitiveSearch)
-
-    if (program.startDateTime == nil || program.endDateTime == nil) {
-        continue
-    }
-
-    var event: EKEvent = EKEvent(eventStore: eventStore)
-    event.calendar     = calendar
-    event.title        = NSString(format: "[%@] %@", station, program.title != nil ? program.title! : "") as String
-    event.startDate    = program.startDateTime!
-    event.endDate      = program.endDateTime!
-    event.availability = .Free
-    event.notes        = memo
-
-    do {
-        try eventStore.saveEvent(event, span: EKSpan.ThisEvent, commit: false)
-    } catch {
-        print("saving error")
-    }
+for iepg in iepgs {
+    converter.addTVPrograms(iepg.programInformations)
 }
 
-do {
-    try eventStore.commit()
-    
-} catch {
-    print("commiting error")
-}
+
+try converter.saveToCalendar(calendar!)

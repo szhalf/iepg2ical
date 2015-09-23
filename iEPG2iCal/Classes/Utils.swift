@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 sz50.com. All rights reserved.
 //
 
-import Cocoa
+import Foundation
 
 class Utils {
 
