@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		63530F1C1BB2C78500CFD286 /* Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63530F1B1BB2C78500CFD286 /* Converter.swift */; settings = {ASSET_TAGS = (); }; };
+		63530F1C1BB2C78500CFD286 /* Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63530F1B1BB2C78500CFD286 /* Converter.swift */; };
 		63A8967B1BB291BB0001CF86 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A8967A1BB291BB0001CF86 /* main.swift */; };
 		63A896851BB292120001CF86 /* iEPG.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A896821BB291E40001CF86 /* iEPG.swift */; };
 		63A896861BB292140001CF86 /* TVProgramInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63A896831BB291E40001CF86 /* TVProgramInfo.swift */; };
@@ -108,7 +108,7 @@
 		63A8966F1BB291BB0001CF86 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = sz50.com;
 				TargetAttributes = {
 					63A896761BB291BB0001CF86 = {
@@ -162,8 +162,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -205,8 +207,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -224,6 +228,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Release;
 		};
