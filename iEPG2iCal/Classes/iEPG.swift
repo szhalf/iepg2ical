@@ -64,9 +64,11 @@ class iEPG {
             cursor = range1.location + CRLF.length
         }
 
-        if contentType?.lowercaseString == "application/x-tv-program-info" {
+        if contentType?.lowercaseString == "application/x-tv-program-info"
+                || contentType?.lowercaseString == "application/x-tv-program-digital-info" {
             try self.programInformations.append(TVProgramInfo(data: self._data))
-        } else if contentType?.lowercaseString == "application/x-multi-tv-program-info" {
+        } else if contentType?.lowercaseString == "application/x-multi-tv-program-info"
+                || contentType?.lowercaseString == "application/x-multi-tv-program-digital-info" {
             if boundary == nil {
                 return
             }

@@ -21,7 +21,8 @@ let stationReplaceMap = [
     "ＭＸテレビ"   : "9",
     "ＮＨＫ衛星第一": "BS101",
     "SPTV"       : "CS",
-    "BSDT"       : "BS"
+    "BSDT"       : "BS",
+    "CSDT"       : "CS"
 ]
 
 var filePaths:   [String] = []
@@ -29,11 +30,11 @@ var outputName:  NSString?
 var outputArray: NSArray?
 
 var searchPath:  NSString  = ("~/Downloads" as NSString).stringByExpandingTildeInPath
-searchPath.completePathIntoString(&outputName, caseSensitive: Bool(false), matchesIntoArray: &outputArray, filterTypes: ["tvpi"])
+searchPath.completePathIntoString(&outputName, caseSensitive: Bool(false), matchesIntoArray: &outputArray, filterTypes: ["tvpi", "tvpid"])
 
 for path in outputArray as! [String] {
     var pathExtention = NSString(string: (path as NSString).pathExtension)
-    if pathExtention.isCaseInsensitiveLike("tvpi") {
+    if pathExtention.length > 0 {
         filePaths.append(path)
     }
 }
