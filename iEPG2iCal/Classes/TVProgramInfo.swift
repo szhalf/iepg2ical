@@ -1,6 +1,6 @@
 //
 //  TVProgramInfo.swift
-//  iEPG2iCal 2
+//  iEPG2iCal
 //
 //  Created by Wataru SUZUKI on 8/3/14.
 //  Copyright (c) 2014 sz50.com. All rights reserved.
@@ -9,19 +9,19 @@
 import Foundation
 
 class TVProgramInfo {
-    enum FieldError: ErrorType {
-        case YearValueUnspecified
-        case MonthValueUnspecified
-        case DateValueUnspecified
-        case TimeValueUnspecified
-        case StartValueUnspecified
-        case EndValueUnspecified
+    enum FieldError: Error {
+        case yearValueUnspecified
+        case monthValueUnspecified
+        case dateValueUnspecified
+        case timeValueUnspecified
+        case startValueUnspecified
+        case endValueUnspecified
     }
 
-    var startDateTime: NSDate {
+    var startDateTime: Date {
         return _startDateTime!
     }
-    var endDateTime: NSDate {
+    var endDateTime: Date {
         return _endDateTime!
     }
     var station: String {
@@ -42,50 +42,48 @@ class TVProgramInfo {
         return _performer != nil ? _performer! : ""
     }
 
-    private let CRLF: NSData = NSData(bytes: "\r\n".UTF8String, length: 2)
+    fileprivate let CRLF: Data = "\r\n".data(using: String.Encoding.utf8)!
 
-    private var _data:          NSData
-    private var _encoding:      NSStringEncoding
-    private var _version:       String?
-    private var _startDateTime: NSDate?
-    private var _endDateTime:   NSDate?
-    private var _station:       String?
-    private var _title:         String?
-    private var _subtitle:      String?
-    private var _memo:          String?
-    private var _performer:     String?
-    private var _year:          Int?
-    private var _month:         Int?
-    private var _date:          Int?
-    private var _timeStart:     String?
-    private var _timeEnd:       String?
+    fileprivate var _data:          Data
+    fileprivate var _encoding:      String.Encoding
+    fileprivate var _version:       String?
+    fileprivate var _startDateTime: Date?
+    fileprivate var _endDateTime:   Date?
+    fileprivate var _station:       String?
+    fileprivate var _title:         String?
+    fileprivate var _subtitle:      String?
+    fileprivate var _memo:          String?
+    fileprivate var _performer:     String?
+    fileprivate var _year:          Int?
+    fileprivate var _month:         Int?
+    fileprivate var _date:          Int?
+    fileprivate var _timeStart:     String?
+    fileprivate var _timeEnd:       String?
 
-    init(let data: NSData) throws {
-        _encoding = NSASCIIStringEncoding
+    init(data: Data) throws {
+        _encoding = String.Encoding.ascii
         _data     = data
 
         try self.parse()
     }
 
-    private func parse() throws {
+    fileprivate func parse() throws {
         var headerPartEnds: Bool = false
         var cursor:         Int  = 0
-        while cursor < _data.length {
-            let range1: NSRange = _data.rangeOfData(CRLF, options:NSDataSearchOptions(rawValue: 0), range:NSMakeRange(cursor, _data.length - cursor))
-
-            if range1.location == NSNotFound {
+        while cursor < _data.count {
+            guard let range1 = _data.range(of: CRLF, options: Data.SearchOptions(rawValue: 0), in: Range<Data.Index>(uncheckedBounds: (cursor, _data.count))) else {
                 break
             }
 
-            headerPartEnds = cursor == range1.location
+            headerPartEnds = cursor == range1.lowerBound
 
-            if (!headerPartEnds) {
-                let lineData: NSData = _data.subdataWithRange(NSMakeRange(cursor, range1.location - cursor))
-                let line:     String = NSString(data: lineData, encoding: _encoding)! as String
+            if !headerPartEnds {
+                let lineData: Data   = _data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound)))
+                let line:     String = String(data: lineData, encoding: _encoding)!
 
                 let (name, value) = Utils.splitStringIntoKeyAndValue(line, delimiter: ":")
 
-                switch name.lowercaseString {
+                switch name.lowercased() {
                 case "content-type":
                     (_, _encoding) = Utils.parseContentType(value as String)
 
@@ -130,71 +128,69 @@ class TVProgramInfo {
                 }
 
             } else {
-                cursor += CRLF.length
-                _memo = NSString(data: _data.subdataWithRange(NSMakeRange(cursor, _data.length - cursor)), encoding: _encoding) as String?
+                cursor += CRLF.count
+                _memo = String(data: _data.subdata(in: Range(uncheckedBounds: (cursor, _data.count))), encoding: _encoding) as String?
                 break
             }
-            cursor = range1.location + CRLF.length
+            cursor = range1.lowerBound + CRLF.count
         }
 
         do {
             try _startDateTime = self.makeDate(year: _year, month: _month, date: _date, time: _timeStart)
-        } catch FieldError.TimeValueUnspecified {
-            throw FieldError.StartValueUnspecified
+        } catch FieldError.timeValueUnspecified {
+            throw FieldError.startValueUnspecified
         }
 
         do {
             try _endDateTime = self.makeDate(year: _year, month: _month, date: _date, time: _timeEnd)
-        } catch FieldError.TimeValueUnspecified {
-            throw FieldError.EndValueUnspecified
+        } catch FieldError.timeValueUnspecified {
+            throw FieldError.endValueUnspecified
         }
 
-        if (_startDateTime!.compare(_endDateTime!) == NSComparisonResult.OrderedDescending) {
-            _endDateTime = _endDateTime!.dateByAddingTimeInterval(NSTimeInterval(60 * 60 * 24))
+        if _startDateTime!.compare(_endDateTime!) == ComparisonResult.orderedDescending {
+            _endDateTime = _endDateTime!.addingTimeInterval(TimeInterval(60 * 60 * 24))
         }
     }
 
-    private func makeDate(let year year: Int?, let month: Int?, let date: Int?, let time: String?) throws -> NSDate {
-        if (year == nil) {
-            throw FieldError.YearValueUnspecified
+    fileprivate func makeDate(year: Int?, month: Int?, date: Int?, time: String?) throws -> Date {
+        if year == nil {
+            throw FieldError.yearValueUnspecified
         }
 
-        if (month == nil) {
-            throw FieldError.MonthValueUnspecified
+        if month == nil {
+            throw FieldError.monthValueUnspecified
         }
 
-        if (date == nil) {
-            throw FieldError.DateValueUnspecified
+        if date == nil {
+            throw FieldError.dateValueUnspecified
         }
 
-        if (time == nil) {
-            throw FieldError.TimeValueUnspecified
+        if time == nil {
+            throw FieldError.timeValueUnspecified
         }
 
-        let array:  [String]  = time!.componentsSeparatedByString(":")
+        let array:  [String]  = time!.components(separatedBy: ":")
         let hour:   Int       = Int(array[0])!
         let minute: Int       = Int(array[1])!
-        let now               = NSDate()
-        let calendar          = NSCalendar(identifier: NSCalendarIdentifierGregorian)!
-        var calendarUnitFlags = NSCalendarUnit()
+        let now               = Date()
+        let calendar          = Calendar(identifier: Calendar.Identifier.gregorian)
+        let calendarUnitFlags: Set<Calendar.Component> = [Calendar.Component.year, Calendar.Component.month, Calendar.Component.day]
 
-        calendarUnitFlags.insert(NSCalendarUnit.Year)
-        calendarUnitFlags.insert(NSCalendarUnit.Month)
-        calendarUnitFlags.insert(NSCalendarUnit.Day)
+        var components: DateComponents = calendar.dateComponents(calendarUnitFlags, from: now)
 
-        let components: NSDateComponents = calendar.components(calendarUnitFlags, fromDate: now)
+        components.setValue(year, for: Calendar.Component.year)
+        components.setValue(month, for: Calendar.Component.month)
+        components.setValue(date, for: Calendar.Component.day)
+        components.setValue(hour < 24 ? hour : hour - 24, for: Calendar.Component.hour)
+        components.setValue(minute, for: Calendar.Component.minute)
 
-        components.setValue(year!, forComponent: NSCalendarUnit.Year)
-        components.setValue(month!, forComponent: NSCalendarUnit.Month)
-        components.setValue(date!, forComponent: NSCalendarUnit.Day)
-        components.setValue(hour < 24 ? hour : hour - 24, forComponent: NSCalendarUnit.Hour)
-        components.setValue(minute, forComponent: NSCalendarUnit.Minute)
-
-        if (hour >= 24) {
-            components.setValue(components.day + 1, forComponent: NSCalendarUnit.Day)
+        if hour >= 24 {
+            if let day = components.day {
+                components.setValue(day + 1, for: Calendar.Component.day)
+            }
         }
 
-        return calendar.dateFromComponents(components)!
+        return calendar.date(from: components)!
     }
 
 }

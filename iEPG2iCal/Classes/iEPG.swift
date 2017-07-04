@@ -1,6 +1,6 @@
 //
 //  iEPG.swift
-//  iEPG2iCal 2
+//  iEPG2iCal
 //
 //  Created by Wataru SUZUKI on 8/3/14.
 //  Copyright (c) 2014 sz50.com. All rights reserved.
@@ -11,48 +11,46 @@ import Foundation
 class iEPG {
     var programInformations: [TVProgramInfo]
 
-    private let CRLF: NSData = NSData(bytes: "\r\n".UTF8String, length: 2)
+    fileprivate let CRLF: Data = "\r\n".data(using: String.Encoding.utf8)!
 
-    private var _data: NSData
+    fileprivate var _data: Data
 
-    init(data: NSData) throws {
+    init(data: Data) throws {
         programInformations = []
         _data               = data
 
         try self.parse()
     }
 
-    convenience init(let path: String) throws {
-        try self.init(data: NSData(contentsOfFile: path)!)
+    convenience init(path: String) throws {
+        try self.init(data: Data(contentsOf: URL(fileURLWithPath: path)))
     }
 
-    private func parse() throws {
+    fileprivate func parse() throws {
         // searching content mime type and boundary
         var contentType: String?
-        var encoding:    NSStringEncoding = NSASCIIStringEncoding
+        var encoding:    String.Encoding = String.Encoding.ascii
         var boundary:    String?
 
         var cursor: Int = 0
-        while cursor < self._data.length {
-            let range1: NSRange = self._data.rangeOfData(CRLF, options: NSDataSearchOptions(rawValue: 0), range: NSMakeRange(cursor, self._data.length - cursor))
+        while cursor < self._data.count {
+            guard let range1 = self._data.range(of: CRLF, options: Data.SearchOptions(rawValue: 0), in: Range<Data.Index>(uncheckedBounds: (cursor, self._data.count))) else {
+                break;
+            }
 
-            if range1.location == NSNotFound {
+            if cursor == range1.lowerBound {
+                cursor = range1.lowerBound + CRLF.count
                 break
             }
 
-            if cursor == range1.location {
-                cursor = range1.location + CRLF.length
-                break
-            }
-
-            let lineData: NSData = self._data.subdataWithRange(NSMakeRange(cursor, range1.location - cursor))
-            let line:     String = NSString(data: lineData, encoding: NSASCIIStringEncoding)! as String
+            let lineData: Data   = self._data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound)))
+            let line:     String = String(data: lineData, encoding: String.Encoding.ascii)!
 
             let (name, value) = Utils.splitStringIntoKeyAndValue(line, delimiter: ":")
 
-            switch name.lowercaseString {
+            switch name.lowercased() {
             case "content-type":
-                (contentType, encoding) = Utils.parseContentType(value as String)
+                (contentType, encoding) = Utils.parseContentType(value)
 
             case "boundary":
                 boundary = value
@@ -61,45 +59,47 @@ class iEPG {
                 break
             }
 
-            cursor = range1.location + CRLF.length
+            cursor = range1.lowerBound + CRLF.count
         }
 
-        if contentType?.lowercaseString == "application/x-tv-program-info"
-                || contentType?.lowercaseString == "application/x-tv-program-digital-info" {
+        if contentType?.lowercased() == "application/x-tv-program-info"
+                || contentType?.lowercased() == "application/x-tv-program-digital-info" {
             try self.programInformations.append(TVProgramInfo(data: self._data))
-        } else if contentType?.lowercaseString == "application/x-multi-tv-program-info"
-                || contentType?.lowercaseString == "application/x-multi-tv-program-digital-info" {
+        } else if contentType?.lowercased() == "application/x-multi-tv-program-info"
+                || contentType?.lowercased() == "application/x-multi-tv-program-digital-info" {
             if boundary == nil {
                 return
             }
 
-            let boundaryData: NSMutableData = NSMutableData(data: CRLF)
-            boundaryData.appendData(boundary!.dataUsingEncoding(encoding)!)
+            var boundaryData: Data = CRLF
+            boundaryData.append(boundary!.data(using: encoding)!)
 
-            let terminatorData: NSMutableData = NSMutableData(data: boundaryData)
-            terminatorData.appendData(NSString(string: "--").dataUsingEncoding(encoding)!)
+            var terminatorData: Data = boundaryData
+            terminatorData.append("--".data(using: encoding)!)
 
-            while cursor < self._data.length {
-                let range:              NSRange = NSMakeRange(cursor, self._data.length - cursor)
-                let boundaryPosition:   NSRange = self._data.rangeOfData(boundaryData, options:NSDataSearchOptions(rawValue: 0), range:range)
-                let terminatorPosition: NSRange = self._data.rangeOfData(terminatorData, options:NSDataSearchOptions(rawValue: 0), range:range)
+            while cursor < self._data.count {
+                let range: Range = Range(uncheckedBounds: (cursor, self._data.count))
 
-                if boundaryPosition.location == NSNotFound {
+                guard let boundaryPosition: Range = self._data.range(of: boundaryData, options:Data.SearchOptions(rawValue: 0), in:range) else {
                     break
                 }
-                if cursor == boundaryPosition.location {
-                    cursor = boundaryPosition.location + boundaryPosition.length + CRLF.length
+                guard let terminatorPosition: Range = self._data.range(of: terminatorData, options:Data.SearchOptions(rawValue: 0), in:range) else {
+                    break
+                }
+
+                if cursor == boundaryPosition.lowerBound {
+                    cursor = boundaryPosition.upperBound + CRLF.count
                     continue
                 }
 
-                let data: NSData = self._data.subdataWithRange(NSMakeRange(cursor, boundaryPosition.location - cursor))
+                let data: Data = self._data.subdata(in: Range(uncheckedBounds: (cursor, boundaryPosition.lowerBound)))
 
                 try self.programInformations.append(TVProgramInfo(data: data))
 
-                if boundaryPosition.location == terminatorPosition.location {
+                if boundaryPosition.lowerBound == terminatorPosition.lowerBound {
                     break
                 }
-                cursor = boundaryPosition.location + boundaryPosition.length + CRLF.length
+                cursor = boundaryPosition.upperBound + CRLF.count
             }
         }
     }

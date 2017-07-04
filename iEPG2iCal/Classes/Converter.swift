@@ -7,14 +7,27 @@
 //
 
 import EventKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 class Converter: NSObject {
     var stationReplaceMap:        [String: String]
     var defaultEventAvailability: EKEventAvailability
 
-    private let _eventStore:     EKEventStore
-    private var _events:         [EKEvent]?
-    private var _tvProgramInfos: [TVProgramInfo]
+    fileprivate let _eventStore:     EKEventStore
+    fileprivate var _events:         [EKEvent]?
+    fileprivate var _tvProgramInfos: [TVProgramInfo]
 
     init(withEventStore store: EKEventStore) {
         _eventStore     = store
@@ -22,26 +35,27 @@ class Converter: NSObject {
         _tvProgramInfos = [TVProgramInfo]()
 
         stationReplaceMap        = [String: String]()
-        defaultEventAvailability = EKEventAvailability.Free
+        defaultEventAvailability = EKEventAvailability.free
     }
 
-    private func convertStationName(var string: String) -> String {
+    private func convertStationName(_ string: String) -> String {
+        var string = string
         for (original, replaced) in self.stationReplaceMap {
-            string = string.stringByReplacingOccurrencesOfString(original, withString:replaced)
+            string = string.replacingOccurrences(of: original, with:replaced)
         }
 
         return string
     }
 
-    func addTVProgram(programs: TVProgramInfo) {
+    func addTVProgram(_ programs: TVProgramInfo) {
         _tvProgramInfos.append(programs)
     }
 
-    func addTVPrograms(programs: [TVProgramInfo]) {
+    func addTVPrograms(_ programs: [TVProgramInfo]) {
         _tvProgramInfos += programs
     }
 
-    func setTVPrograms(programs: [TVProgramInfo]) {
+    func setTVPrograms(_ programs: [TVProgramInfo]) {
         _tvProgramInfos = programs
     }
 
@@ -54,10 +68,10 @@ class Converter: NSObject {
             let event: EKEvent = EKEvent(eventStore: self._eventStore)
 
             event.title        = !station.isEmpty ? NSString(format: "[%@] ", station) as String + program.title : program.title
-            event.startDate    = program.startDateTime
-            event.endDate      = program.endDateTime
+            event.startDate    = program.startDateTime as Date
+            event.endDate      = program.endDateTime as Date
             event.availability = self.defaultEventAvailability
-            event.notes        = program.memo.stringByReplacingOccurrencesOfString("<BR>", withString:"\r\n", options: NSStringCompareOptions.CaseInsensitiveSearch)
+            event.notes        = program.memo.replacingOccurrences(of: "<BR>", with:"\r\n", options: NSString.CompareOptions.caseInsensitive)
 
             self._events! += [event]
         }
@@ -65,13 +79,13 @@ class Converter: NSObject {
         return self._events!
     }
 
-    func convert(tvPrograms: [TVProgramInfo]) -> [EKEvent] {
+    func convert(_ tvPrograms: [TVProgramInfo]) -> [EKEvent] {
         _tvProgramInfos = tvPrograms
 
         return self.convert()
     }
 
-    func saveToCalendar(calendar: EKCalendar) throws {
+    func saveToCalendar(_ calendar: EKCalendar) throws {
         if self._events == nil {
             self.convert()
         }
@@ -82,7 +96,7 @@ class Converter: NSObject {
 
         for event in self._events! {
             event.calendar = calendar
-            try eventStore.saveEvent(event, span: EKSpan.ThisEvent, commit: false)
+            try eventStore.save(event, span: EKSpan.thisEvent, commit: false)
         }
 
         try eventStore.commit()

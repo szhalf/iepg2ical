@@ -34,15 +34,14 @@ let stationReplaceMap = [
 ]
 
 var filePaths:   [String] = []
-var outputName:  NSString?
-var outputArray: NSArray?
+var outputName:  String   = ""
+var outputArray: [String] = []
 
-var searchPath:  NSString  = ("~/Downloads" as NSString).stringByExpandingTildeInPath
-searchPath.completePathIntoString(&outputName, caseSensitive: Bool(false), matchesIntoArray: &outputArray, filterTypes: ["tvpi", "tvpid"])
+let searchPath = ("~/Downloads" as NSString).standardizingPath
+let n = searchPath.completePath(into: &outputName, caseSensitive: Bool(false), matchesInto: &outputArray, filterTypes: ["tvpi", "tvpid"])
 
-for path in outputArray as! [String] {
-    var pathExtention = NSString(string: (path as NSString).pathExtension)
-    if pathExtention.length > 0 {
+for path in outputArray {
+    if (path as NSString).pathExtension.characters.count > 0 {
         filePaths.append(path)
     }
 }
@@ -53,37 +52,39 @@ if (filePaths.count == 0) {
 }
 
 var eventStore:          EKEventStore          = EKEventStore()
-var authorizationStatus: EKAuthorizationStatus = EKEventStore.authorizationStatusForEntityType(EKEntityType.Event)
+var authorizationStatus: EKAuthorizationStatus = EKEventStore.authorizationStatus(for: EKEntityType.event)
 
 switch authorizationStatus {
-case .Authorized:
+case .authorized:
     break
 
-case .NotDetermined:
-    eventStore.requestAccessToEntityType(EKEntityType.Event, completion: { (granted: Bool, e: NSError?) in
+case .notDetermined:
+    eventStore.requestAccess(to: EKEntityType.event, completion: { (granted: Bool, e: Error?) in
         if (granted) {
             print("granted")
         }
-    })
+        } as EKEventStoreRequestAccessCompletionHandler)
 
-case .Restricted:
+case .restricted:
     print("restricted")
 
-case .Denied:
+case .denied:
     print("denied")
 
 }
 
 var calendarIdentifier: String! = nil
-for var c: EKCalendar in eventStore.calendarsForEntityType(EKEntityType.Event) {
+for var c: EKCalendar in eventStore.calendars(for: EKEntityType.event) {
     if c.title == calendarName {
         calendarIdentifier = c.calendarIdentifier
         break
     }
 }
 
-var calendar: EKCalendar? = eventStore.calendarWithIdentifier(calendarIdentifier)
-if (calendar == nil) {
+let calendar: EKCalendar
+if calendarIdentifier != nil, let cal = eventStore.calendar(withIdentifier: calendarIdentifier) {
+    calendar = cal
+} else {
     print("Calendar was not found")
     exit(1)
 }
@@ -95,11 +96,10 @@ for path in filePaths {
 
 let converter = Converter(withEventStore: eventStore)
 converter.stationReplaceMap        = stationReplaceMap
-converter.defaultEventAvailability = EKEventAvailability.Free
+converter.defaultEventAvailability = EKEventAvailability.free
 
 for iepg in iepgs {
     converter.addTVPrograms(iepg.programInformations)
 }
 
-
-try converter.saveToCalendar(calendar!)
+try converter.saveToCalendar(calendar)
