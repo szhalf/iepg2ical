@@ -72,11 +72,8 @@ class iEPG {
                 return
             }
 
-            var boundaryData: Data = iEPG.CRLF_DATA
-            boundaryData.append(boundary!.data(using: encoding)!)
-
-            var terminatorData: Data = boundaryData
-            terminatorData.append("--".data(using: encoding)!)
+            let boundaryData:   Data = (iEPG.CRLF + boundary!).data(using: encoding)!
+            let terminatorData: Data = (iEPG.CRLF + boundary! + "--").data(using: encoding)!
 
             while cursor < self._data.count {
                 let range: Range = Range(uncheckedBounds: (cursor, self._data.count))
