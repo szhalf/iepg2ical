@@ -70,7 +70,7 @@ class TVProgramInfo {
 
     fileprivate func parse() throws {
         var headerPartEnds = false
-        var cursor = 0
+        var cursor         = 0
         while cursor < _data.count {
             guard let range1 = _data.range(of: TVProgramInfo.CRLF_DATA, options: Data.SearchOptions(rawValue: 0), in: Range<Data.Index>(uncheckedBounds: (cursor, _data.count))) else {
                 break
