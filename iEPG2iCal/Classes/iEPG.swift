@@ -44,8 +44,7 @@ class iEPG {
                 break
             }
 
-            let lineData = self._data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound)))
-            let line     = String(data: lineData, encoding: String.Encoding.ascii)!
+            let line = String(data: self._data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound))), encoding: String.Encoding.ascii)!
 
             let (name, value) = Utils.splitStringIntoKeyAndValue(line, delimiter: ":")
 
@@ -63,11 +62,11 @@ class iEPG {
             cursor = range1.lowerBound + iEPG.CRLF_DATA.count
         }
 
-        if optionalContentType?.lowercased() == "application/x-tv-program-info"
-                || optionalContentType?.lowercased() == "application/x-tv-program-digital-info" {
+        switch optionalContentType?.lowercased() {
+        case "application/x-tv-program-info"?, "application/x-tv-program-digital-info"?:
             try self.programInformations.append(TVProgramInfo(data: self._data))
-        } else if optionalContentType?.lowercased() == "application/x-multi-tv-program-info"
-                || optionalContentType?.lowercased() == "application/x-multi-tv-program-digital-info" {
+
+        case "application/x-multi-tv-program-info"?, "application/x-multi-tv-program-digital-info"?:
             if optionalBoundary == nil {
                 return
             }
@@ -98,8 +97,11 @@ class iEPG {
                 }
                 cursor = boundaryPosition.upperBound + iEPG.CRLF_DATA.count
             }
+
+        default:
+            break
         }
     }
-    
+
 }
 

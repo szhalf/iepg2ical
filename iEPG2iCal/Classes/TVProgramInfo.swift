@@ -79,8 +79,7 @@ class TVProgramInfo {
             headerPartEnds = cursor == range1.lowerBound
 
             if !headerPartEnds {
-                let lineData = _data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound)))
-                let line     = String(data: lineData, encoding: _encoding)!
+                let line = String(data: _data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound))), encoding: _encoding)!
 
                 let (name, value) = Utils.splitStringIntoKeyAndValue(line, delimiter: ":")
 
