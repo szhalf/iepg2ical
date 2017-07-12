@@ -137,13 +137,13 @@ class TVProgramInfo {
         }
 
         do {
-            try _startDateTime = self.makeDate(year: _year, month: _month, date: _date, time: _timeStart)
+            try _startDateTime = self.makeDate(claimedYear: _year, claimedMonth: _month, claimedDate: _date, claimedTime: _timeStart)
         } catch FieldError.timeValueUnspecified {
             throw FieldError.startValueUnspecified
         }
 
         do {
-            try _endDateTime = self.makeDate(year: _year, month: _month, date: _date, time: _timeEnd)
+            try _endDateTime = self.makeDate(claimedYear: _year, claimedMonth: _month, claimedDate: _date, claimedTime: _timeEnd)
         } catch FieldError.timeValueUnspecified {
             throw FieldError.endValueUnspecified
         }
@@ -153,45 +153,44 @@ class TVProgramInfo {
         }
     }
 
-    fileprivate func makeDate(year: Int?, month: Int?, date: Int?, time: String?) throws -> Date {
-        if year == nil {
+    fileprivate func makeDate(claimedYear: Int?, claimedMonth: Int?, claimedDate: Int?, claimedTime: String?) throws -> Date {
+        if claimedYear == nil {
             throw FieldError.yearValueUnspecified
         }
 
-        if month == nil {
+        if claimedMonth == nil {
             throw FieldError.monthValueUnspecified
         }
 
-        if date == nil {
+        if claimedDate == nil {
             throw FieldError.dateValueUnspecified
         }
 
-        if time == nil {
+        if claimedTime == nil {
             throw FieldError.timeValueUnspecified
         }
 
-        let array:  [String]  = time!.components(separatedBy: ":")
+        let array:  [String]  = claimedTime!.components(separatedBy: ":")
         let hour:   Int       = Int(array[0])!
         let minute: Int       = Int(array[1])!
-        let now               = Date()
-        let calendar          = Calendar(identifier: Calendar.Identifier.gregorian)
-        let calendarUnitFlags: Set<Calendar.Component> = [Calendar.Component.year, Calendar.Component.month, Calendar.Component.day]
 
-        var components: DateComponents = calendar.dateComponents(calendarUnitFlags, from: now)
+        let calendar                            = Calendar(identifier: Calendar.Identifier.gregorian)
+        let components: Set<Calendar.Component> = [Calendar.Component.year, Calendar.Component.month, Calendar.Component.day]
+        var dateComponents: DateComponents      = calendar.dateComponents(components, from: Date())
 
-        components.setValue(year, for: Calendar.Component.year)
-        components.setValue(month, for: Calendar.Component.month)
-        components.setValue(date, for: Calendar.Component.day)
-        components.setValue(hour < 24 ? hour : hour - 24, for: Calendar.Component.hour)
-        components.setValue(minute, for: Calendar.Component.minute)
+        dateComponents.setValue(claimedYear, for: Calendar.Component.year)
+        dateComponents.setValue(claimedMonth, for: Calendar.Component.month)
+        dateComponents.setValue(claimedDate, for: Calendar.Component.day)
+        dateComponents.setValue(hour < 24 ? hour : hour - 24, for: Calendar.Component.hour)
+        dateComponents.setValue(minute, for: Calendar.Component.minute)
 
         if hour >= 24 {
-            if let day = components.day {
-                components.setValue(day + 1, for: Calendar.Component.day)
+            if let day = dateComponents.day {
+                dateComponents.setValue(day + 1, for: Calendar.Component.day)
             }
         }
 
-        return calendar.date(from: components)!
+        return calendar.date(from: dateComponents)!
     }
 
 }

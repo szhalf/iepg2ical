@@ -29,9 +29,9 @@ class iEPG {
 
     fileprivate func parse() throws {
         // searching content mime type and boundary
-        var contentType: String?
-        var encoding:    String.Encoding = String.Encoding.ascii
-        var boundary:    String?
+        var optionalContentType: String?
+        var encoding:            String.Encoding = String.Encoding.ascii
+        var optionalBoundary:    String?
 
         var cursor: Int = 0
         while cursor < self._data.count {
@@ -51,10 +51,10 @@ class iEPG {
 
             switch name.lowercased() {
             case "content-type":
-                (contentType, encoding) = Utils.parseContentType(value)
+                (optionalContentType, encoding) = Utils.parseContentType(value)
 
             case "boundary":
-                boundary = value
+                optionalBoundary = value
 
             default:
                 break
@@ -63,17 +63,17 @@ class iEPG {
             cursor = range1.lowerBound + iEPG.CRLF_DATA.count
         }
 
-        if contentType?.lowercased() == "application/x-tv-program-info"
-                || contentType?.lowercased() == "application/x-tv-program-digital-info" {
+        if optionalContentType?.lowercased() == "application/x-tv-program-info"
+                || optionalContentType?.lowercased() == "application/x-tv-program-digital-info" {
             try self.programInformations.append(TVProgramInfo(data: self._data))
-        } else if contentType?.lowercased() == "application/x-multi-tv-program-info"
-                || contentType?.lowercased() == "application/x-multi-tv-program-digital-info" {
-            if boundary == nil {
+        } else if optionalContentType?.lowercased() == "application/x-multi-tv-program-info"
+                || optionalContentType?.lowercased() == "application/x-multi-tv-program-digital-info" {
+            if optionalBoundary == nil {
                 return
             }
 
-            let boundaryData:   Data = (iEPG.CRLF + boundary!).data(using: encoding)!
-            let terminatorData: Data = (iEPG.CRLF + boundary! + "--").data(using: encoding)!
+            let boundaryData:   Data = (iEPG.CRLF + optionalBoundary!).data(using: encoding)!
+            let terminatorData: Data = (iEPG.CRLF + optionalBoundary! + "--").data(using: encoding)!
 
             while cursor < self._data.count {
                 let range: Range = Range(uncheckedBounds: (cursor, self._data.count))
