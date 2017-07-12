@@ -63,9 +63,9 @@ class Converter: NSObject {
         self._events = []
 
         for program in _tvProgramInfos {
-            let station: String = self.convertStationName(program.station)
+            let station = self.convertStationName(program.station)
 
-            let event: EKEvent = EKEvent(eventStore: self._eventStore)
+            let event = EKEvent(eventStore: self._eventStore)
 
             event.title        = !station.isEmpty ? NSString(format: "[%@] ", station) as String + program.title : program.title
             event.startDate    = program.startDateTime as Date

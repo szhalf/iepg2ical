@@ -34,7 +34,7 @@ let stationReplaceMap = [
 ]
 
 var filePaths:   [String] = []
-var outputName:  String   = ""
+var outputName            = ""
 var outputArray: [String] = []
 
 let searchPath = ("~/Downloads" as NSString).standardizingPath
@@ -51,8 +51,8 @@ if (filePaths.count == 0) {
     exit(1)
 }
 
-var eventStore:          EKEventStore          = EKEventStore()
-var authorizationStatus: EKAuthorizationStatus = EKEventStore.authorizationStatus(for: EKEntityType.event)
+var eventStore          = EKEventStore()
+var authorizationStatus = EKEventStore.authorizationStatus(for: EKEntityType.event)
 
 switch authorizationStatus {
 case .authorized:

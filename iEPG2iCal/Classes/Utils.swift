@@ -33,7 +33,7 @@ class Utils {
 
         let components: [String] = string.components(separatedBy: ";")
         for i in 0 ..< components.count {
-            let s: String = components[i]
+            let s = components[i]
 
             if i == 0 {
                 contentType = s.trimmingCharacters(in: CharacterSet.whitespaces)
@@ -50,10 +50,10 @@ class Utils {
     }
 
     class func splitStringIntoKeyAndValue(_ string: String, delimiter: String) -> (String, String) {
-        var key:   String = ""
-        var value: String = ""
+        var key   = ""
+        var value = ""
 
-        let range: Range? = string.range(of: delimiter)
+        let range = string.range(of: delimiter)
         if range != nil {
             key = string.substring(to: range!.lowerBound).trimmingCharacters(in: CharacterSet.whitespaces)
             value = string.substring(from: range!.upperBound).trimmingCharacters(in: CharacterSet.whitespaces)

@@ -33,7 +33,7 @@ class iEPG {
         var encoding:            String.Encoding = String.Encoding.ascii
         var optionalBoundary:    String?
 
-        var cursor: Int = 0
+        var cursor = 0
         while cursor < self._data.count {
             guard let range1 = self._data.range(of: iEPG.CRLF_DATA, options: Data.SearchOptions(rawValue: 0), in: Range<Data.Index>(uncheckedBounds: (cursor, self._data.count))) else {
                 break;
@@ -44,8 +44,8 @@ class iEPG {
                 break
             }
 
-            let lineData: Data   = self._data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound)))
-            let line:     String = String(data: lineData, encoding: String.Encoding.ascii)!
+            let lineData = self._data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound)))
+            let line     = String(data: lineData, encoding: String.Encoding.ascii)!
 
             let (name, value) = Utils.splitStringIntoKeyAndValue(line, delimiter: ":")
 
@@ -72,15 +72,15 @@ class iEPG {
                 return
             }
 
-            let boundaryData:   Data = (iEPG.CRLF + optionalBoundary!).data(using: encoding)!
-            let terminatorData: Data = (iEPG.CRLF + optionalBoundary! + "--").data(using: encoding)!
+            let boundaryData   = (iEPG.CRLF + optionalBoundary!).data(using: encoding)!
+            let terminatorData = (iEPG.CRLF + optionalBoundary! + "--").data(using: encoding)!
 
             while cursor < self._data.count {
-                let range: Range = Range(uncheckedBounds: (cursor, self._data.count))
+                let range = Range(uncheckedBounds: (cursor, self._data.count))
 
                 guard
-                    let boundaryPosition:   Range = self._data.range(of: boundaryData, options:Data.SearchOptions(rawValue: 0), in:range),
-                    let terminatorPosition: Range = self._data.range(of: terminatorData, options:Data.SearchOptions(rawValue: 0), in:range) else {
+                    let boundaryPosition   = self._data.range(of: boundaryData, options:Data.SearchOptions(rawValue: 0), in:range),
+                    let terminatorPosition = self._data.range(of: terminatorData, options:Data.SearchOptions(rawValue: 0), in:range) else {
                     break
                 }
 
@@ -89,7 +89,7 @@ class iEPG {
                     continue
                 }
 
-                let data: Data = self._data.subdata(in: Range(uncheckedBounds: (cursor, boundaryPosition.lowerBound)))
+                let data = self._data.subdata(in: Range(uncheckedBounds: (cursor, boundaryPosition.lowerBound)))
 
                 try self.programInformations.append(TVProgramInfo(data: data))
 

@@ -69,8 +69,8 @@ class TVProgramInfo {
     }
 
     fileprivate func parse() throws {
-        var headerPartEnds: Bool = false
-        var cursor:         Int  = 0
+        var headerPartEnds = false
+        var cursor = 0
         while cursor < _data.count {
             guard let range1 = _data.range(of: TVProgramInfo.CRLF_DATA, options: Data.SearchOptions(rawValue: 0), in: Range<Data.Index>(uncheckedBounds: (cursor, _data.count))) else {
                 break
@@ -79,8 +79,8 @@ class TVProgramInfo {
             headerPartEnds = cursor == range1.lowerBound
 
             if !headerPartEnds {
-                let lineData: Data   = _data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound)))
-                let line:     String = String(data: lineData, encoding: _encoding)!
+                let lineData = _data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound)))
+                let line     = String(data: lineData, encoding: _encoding)!
 
                 let (name, value) = Utils.splitStringIntoKeyAndValue(line, delimiter: ":")
 
@@ -170,13 +170,13 @@ class TVProgramInfo {
             throw FieldError.timeValueUnspecified
         }
 
-        let array:  [String]  = claimedTime!.components(separatedBy: ":")
-        let hour:   Int       = Int(array[0])!
-        let minute: Int       = Int(array[1])!
+        let array  = claimedTime!.components(separatedBy: ":")
+        let hour   = Int(array[0])!
+        let minute = Int(array[1])!
 
-        let calendar                            = Calendar(identifier: Calendar.Identifier.gregorian)
-        let components: Set<Calendar.Component> = [Calendar.Component.year, Calendar.Component.month, Calendar.Component.day]
-        var dateComponents: DateComponents      = calendar.dateComponents(components, from: Date())
+        let calendar       = Calendar(identifier: Calendar.Identifier.gregorian)
+        let components     = [Calendar.Component.year, Calendar.Component.month, Calendar.Component.day] as Set<Calendar.Component>
+        var dateComponents = calendar.dateComponents(components, from: Date())
 
         dateComponents.setValue(claimedYear, for: Calendar.Component.year)
         dateComponents.setValue(claimedMonth, for: Calendar.Component.month)
