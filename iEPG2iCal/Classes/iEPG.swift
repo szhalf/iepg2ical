@@ -78,10 +78,9 @@ class iEPG {
             while cursor < self._data.count {
                 let range: Range = Range(uncheckedBounds: (cursor, self._data.count))
 
-                guard let boundaryPosition: Range = self._data.range(of: boundaryData, options:Data.SearchOptions(rawValue: 0), in:range) else {
-                    break
-                }
-                guard let terminatorPosition: Range = self._data.range(of: terminatorData, options:Data.SearchOptions(rawValue: 0), in:range) else {
+                guard
+                    let boundaryPosition:   Range = self._data.range(of: boundaryData, options:Data.SearchOptions(rawValue: 0), in:range),
+                    let terminatorPosition: Range = self._data.range(of: terminatorData, options:Data.SearchOptions(rawValue: 0), in:range) else {
                     break
                 }
 
