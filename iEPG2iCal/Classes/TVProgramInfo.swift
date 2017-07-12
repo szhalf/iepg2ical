@@ -42,7 +42,8 @@ class TVProgramInfo {
         return _performer != nil ? _performer! : ""
     }
 
-    fileprivate static let CRLF: Data = "\r\n".data(using: String.Encoding.utf8)!
+    fileprivate static let CRLF      = "\r\n"
+    fileprivate static let CRLF_DATA = CRLF.data(using: String.Encoding.utf8)!
 
     fileprivate var _data:          Data
     fileprivate var _encoding:      String.Encoding
@@ -71,7 +72,7 @@ class TVProgramInfo {
         var headerPartEnds: Bool = false
         var cursor:         Int  = 0
         while cursor < _data.count {
-            guard let range1 = _data.range(of: TVProgramInfo.CRLF, options: Data.SearchOptions(rawValue: 0), in: Range<Data.Index>(uncheckedBounds: (cursor, _data.count))) else {
+            guard let range1 = _data.range(of: TVProgramInfo.CRLF_DATA, options: Data.SearchOptions(rawValue: 0), in: Range<Data.Index>(uncheckedBounds: (cursor, _data.count))) else {
                 break
             }
 
@@ -128,11 +129,11 @@ class TVProgramInfo {
                 }
 
             } else {
-                cursor += TVProgramInfo.CRLF.count
+                cursor += TVProgramInfo.CRLF_DATA.count
                 _memo = String(data: _data.subdata(in: Range(uncheckedBounds: (cursor, _data.count))), encoding: _encoding) as String?
                 break
             }
-            cursor = range1.lowerBound + TVProgramInfo.CRLF.count
+            cursor = range1.lowerBound + TVProgramInfo.CRLF_DATA.count
         }
 
         do {

@@ -11,7 +11,8 @@ import Foundation
 class iEPG {
     var programInformations: [TVProgramInfo]
 
-    fileprivate static let CRLF: Data = "\r\n".data(using: String.Encoding.utf8)!
+    fileprivate static let CRLF      = "\r\n"
+    fileprivate static let CRLF_DATA = CRLF.data(using: String.Encoding.utf8)!
 
     fileprivate var _data: Data
 
@@ -34,12 +35,12 @@ class iEPG {
 
         var cursor: Int = 0
         while cursor < self._data.count {
-            guard let range1 = self._data.range(of: iEPG.CRLF, options: Data.SearchOptions(rawValue: 0), in: Range<Data.Index>(uncheckedBounds: (cursor, self._data.count))) else {
+            guard let range1 = self._data.range(of: iEPG.CRLF_DATA, options: Data.SearchOptions(rawValue: 0), in: Range<Data.Index>(uncheckedBounds: (cursor, self._data.count))) else {
                 break;
             }
 
             if cursor == range1.lowerBound {
-                cursor = range1.lowerBound + iEPG.CRLF.count
+                cursor = range1.lowerBound + iEPG.CRLF_DATA.count
                 break
             }
 
@@ -59,7 +60,7 @@ class iEPG {
                 break
             }
 
-            cursor = range1.lowerBound + iEPG.CRLF.count
+            cursor = range1.lowerBound + iEPG.CRLF_DATA.count
         }
 
         if contentType?.lowercased() == "application/x-tv-program-info"
@@ -71,7 +72,7 @@ class iEPG {
                 return
             }
 
-            var boundaryData: Data = iEPG.CRLF
+            var boundaryData: Data = iEPG.CRLF_DATA
             boundaryData.append(boundary!.data(using: encoding)!)
 
             var terminatorData: Data = boundaryData
@@ -88,7 +89,7 @@ class iEPG {
                 }
 
                 if cursor == boundaryPosition.lowerBound {
-                    cursor = boundaryPosition.upperBound + iEPG.CRLF.count
+                    cursor = boundaryPosition.upperBound + iEPG.CRLF_DATA.count
                     continue
                 }
 
@@ -99,7 +100,7 @@ class iEPG {
                 if boundaryPosition.lowerBound == terminatorPosition.lowerBound {
                     break
                 }
-                cursor = boundaryPosition.upperBound + iEPG.CRLF.count
+                cursor = boundaryPosition.upperBound + iEPG.CRLF_DATA.count
             }
         }
     }
