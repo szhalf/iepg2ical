@@ -25,21 +25,41 @@ class TVProgramInfo {
         return _endDateTime!
     }
     var station: String {
-        return _station != nil ? _station! : ""
+        if let value = _station {
+            return value
+        } else {
+            return ""
+        }
     }
     var genre:    Int?
     var subGenre: Int?
     var title: String {
-        return _title != nil ? _title! : ""
+        if let value = _title {
+            return value
+        } else {
+            return ""
+        }
     }
     var subtitle: String {
-        return _subtitle != nil ? _subtitle! : ""
+        if let value = _subtitle {
+            return value
+        } else {
+            return ""
+        }
     }
     var memo: String {
-        return _memo != nil ? _memo! : ""
+        if let value = _memo {
+            return value
+        } else {
+            return ""
+        }
     }
     var performer: String {
-        return _performer != nil ? _performer! : ""
+        if let value = _performer {
+            return value
+        } else {
+            return ""
+        }
     }
 
     fileprivate static let CRLF      = "\r\n"
@@ -69,17 +89,19 @@ class TVProgramInfo {
     }
 
     fileprivate func parse() throws {
-        var headerPartEnds = false
-        var cursor         = 0
+        var cursor = 0
         while cursor < _data.count {
             guard let range1 = _data.range(of: TVProgramInfo.CRLF_DATA, options: Data.SearchOptions(rawValue: 0), in: Range<Data.Index>(uncheckedBounds: (cursor, _data.count))) else {
                 break
             }
 
-            headerPartEnds = cursor == range1.lowerBound
+            let headerPartEnds = cursor == range1.lowerBound
 
             if !headerPartEnds {
-                let line = String(data: _data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound))), encoding: _encoding)!
+                guard let line = String(data: _data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound))), encoding: _encoding) else {
+                    cursor = range1.lowerBound + TVProgramInfo.CRLF_DATA.count
+                    continue
+                }
 
                 let (name, value) = Utils.splitStringIntoKeyAndValue(line, delimiter: ":")
 
@@ -118,10 +140,10 @@ class TVProgramInfo {
                     _performer = value
 
                 case "genre":
-                    self.genre = Int(value)!
+                    self.genre = Int(value)
 
                 case "subgenre":
-                    self.subGenre = Int(value)!
+                    self.subGenre = Int(value)
 
                 default:
                     break
@@ -129,9 +151,10 @@ class TVProgramInfo {
 
             } else {
                 cursor += TVProgramInfo.CRLF_DATA.count
-                _memo = String(data: _data.subdata(in: Range(uncheckedBounds: (cursor, _data.count))), encoding: _encoding) as String?
+                _memo = String(data: _data.subdata(in: Range(uncheckedBounds: (cursor, _data.count))), encoding: _encoding)
                 break
             }
+
             cursor = range1.lowerBound + TVProgramInfo.CRLF_DATA.count
         }
 
@@ -147,39 +170,43 @@ class TVProgramInfo {
             throw FieldError.endValueUnspecified
         }
 
-        if _startDateTime!.compare(_endDateTime!) == ComparisonResult.orderedDescending {
-            _endDateTime = _endDateTime!.addingTimeInterval(TimeInterval(60 * 60 * 24))
+        if let start = _startDateTime, let end = _endDateTime {
+            if (start.compare(end) == ComparisonResult.orderedDescending) {
+                _endDateTime = end.addingTimeInterval(TimeInterval(60 * 60 * 24))
+            }
         }
     }
 
     fileprivate func makeDate(claimedYear: Int?, claimedMonth: Int?, claimedDate: Int?, claimedTime: String?) throws -> Date {
-        if claimedYear == nil {
+        var claimedHour:   Int? = nil
+        var claimedMinute: Int? = nil
+        if let time = claimedTime {
+            let array = time.components(separatedBy: ":")
+
+            claimedHour   = Int(array[0])
+            claimedMinute = Int(array[1])
+        }
+        
+        guard let year = claimedYear else {
             throw FieldError.yearValueUnspecified
         }
-
-        if claimedMonth == nil {
+        guard let month = claimedMonth else {
             throw FieldError.monthValueUnspecified
         }
-
-        if claimedDate == nil {
+        guard let date = claimedDate else {
             throw FieldError.dateValueUnspecified
         }
-
-        if claimedTime == nil {
+        guard let hour = claimedHour, let minute = claimedMinute else {
             throw FieldError.timeValueUnspecified
         }
-
-        let array  = claimedTime!.components(separatedBy: ":")
-        let hour   = Int(array[0])!
-        let minute = Int(array[1])!
 
         let calendar       = Calendar(identifier: Calendar.Identifier.gregorian)
         let components     = [Calendar.Component.year, Calendar.Component.month, Calendar.Component.day] as Set<Calendar.Component>
         var dateComponents = calendar.dateComponents(components, from: Date())
 
-        dateComponents.setValue(claimedYear, for: Calendar.Component.year)
-        dateComponents.setValue(claimedMonth, for: Calendar.Component.month)
-        dateComponents.setValue(claimedDate, for: Calendar.Component.day)
+        dateComponents.setValue(year, for: Calendar.Component.year)
+        dateComponents.setValue(month, for: Calendar.Component.month)
+        dateComponents.setValue(date, for: Calendar.Component.day)
         dateComponents.setValue(hour < 24 ? hour : hour - 24, for: Calendar.Component.hour)
         dateComponents.setValue(minute, for: Calendar.Component.minute)
 

@@ -44,7 +44,10 @@ class iEPG {
                 break
             }
 
-            let line = String(data: self._data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound))), encoding: String.Encoding.ascii)!
+            guard let line = String(data: self._data.subdata(in: Range(uncheckedBounds: (cursor, range1.lowerBound))), encoding: String.Encoding.ascii) else {
+                cursor = range1.lowerBound + iEPG.CRLF_DATA.count
+                break;
+            }
 
             let (name, value) = Utils.splitStringIntoKeyAndValue(line, delimiter: ":")
 
@@ -62,17 +65,21 @@ class iEPG {
             cursor = range1.lowerBound + iEPG.CRLF_DATA.count
         }
 
-        switch optionalContentType?.lowercased() {
-        case "application/x-tv-program-info"?, "application/x-tv-program-digital-info"?:
+        guard let contentType = optionalContentType else {
+            return
+        }
+
+        switch contentType.lowercased() {
+        case "application/x-tv-program-info", "application/x-tv-program-digital-info":
             try self.programInformations.append(TVProgramInfo(data: self._data))
 
-        case "application/x-multi-tv-program-info"?, "application/x-multi-tv-program-digital-info"?:
-            if optionalBoundary == nil {
+        case "application/x-multi-tv-program-info", "application/x-multi-tv-program-digital-info":
+            guard let boundary = optionalBoundary else {
                 return
             }
 
-            let boundaryData   = (iEPG.CRLF + optionalBoundary!).data(using: encoding)!
-            let terminatorData = (iEPG.CRLF + optionalBoundary! + "--").data(using: encoding)!
+            let boundaryData   = (iEPG.CRLF + boundary).data(using: encoding)!
+            let terminatorData = (iEPG.CRLF + boundary + "--").data(using: encoding)!
 
             while cursor < self._data.count {
                 let range = Range(uncheckedBounds: (cursor, self._data.count))
@@ -104,4 +111,3 @@ class iEPG {
     }
 
 }
-
