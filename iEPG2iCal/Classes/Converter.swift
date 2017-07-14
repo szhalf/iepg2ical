@@ -47,16 +47,8 @@ class Converter: NSObject {
         return convertedStationName
     }
 
-    func addTVProgram(_ programs: TVProgramInfo) {
-        _tvProgramInfos.append(programs)
-    }
-
     func addTVPrograms(_ programs: [TVProgramInfo]) {
         _tvProgramInfos += programs
-    }
-
-    func setTVPrograms(_ programs: [TVProgramInfo]) {
-        _tvProgramInfos = programs
     }
 
     func convert() -> [EKEvent] {
@@ -77,12 +69,6 @@ class Converter: NSObject {
         }
 
         return self._events!
-    }
-
-    func convert(_ tvPrograms: [TVProgramInfo]) -> [EKEvent] {
-        _tvProgramInfos = tvPrograms
-
-        return self.convert()
     }
 
     func saveToCalendar(_ calendar: EKCalendar) throws {
