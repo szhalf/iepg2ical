@@ -38,7 +38,7 @@ class Converter: NSObject {
         defaultEventAvailability = EKEventAvailability.free
     }
 
-    private func convertStationName(_ stationName: String) -> String {
+    fileprivate func convertStationName(_ stationName: String) -> String {
         var convertedStationName = stationName
         for (original, replaced) in self.stationReplaceMap {
             convertedStationName = convertedStationName.replacingOccurrences(of: original, with:replaced)
@@ -51,7 +51,7 @@ class Converter: NSObject {
         _tvProgramInfos += programs
     }
 
-    func convert() -> [EKEvent] {
+    fileprivate func convert() {
         self._events = []
 
         for program in _tvProgramInfos {
@@ -67,8 +67,6 @@ class Converter: NSObject {
 
             self._events! += [event]
         }
-
-        return self._events!
     }
 
     func saveToCalendar(_ calendar: EKCalendar) throws {
