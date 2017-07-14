@@ -38,13 +38,13 @@ class Converter: NSObject {
         defaultEventAvailability = EKEventAvailability.free
     }
 
-    private func convertStationName(_ string: String) -> String {
-        var string = string
+    private func convertStationName(_ stationName: String) -> String {
+        var convertedStationName = stationName
         for (original, replaced) in self.stationReplaceMap {
-            string = string.replacingOccurrences(of: original, with:replaced)
+            convertedStationName = convertedStationName.replacingOccurrences(of: original, with:replaced)
         }
 
-        return string
+        return convertedStationName
     }
 
     func addTVProgram(_ programs: TVProgramInfo) {
