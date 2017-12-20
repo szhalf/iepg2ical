@@ -34,7 +34,7 @@ let stationReplaceMap = [
 ]
 
 var filePaths:   [String] = []
-var outputName:  String   = ""
+var outputName            = ""
 var outputArray: [String] = []
 
 let searchPath = ("~/Downloads" as NSString).standardizingPath
@@ -51,8 +51,8 @@ if (filePaths.count == 0) {
     exit(1)
 }
 
-var eventStore:          EKEventStore          = EKEventStore()
-var authorizationStatus: EKAuthorizationStatus = EKEventStore.authorizationStatus(for: EKEntityType.event)
+var eventStore          = EKEventStore()
+var authorizationStatus = EKEventStore.authorizationStatus(for: EKEntityType.event)
 
 switch authorizationStatus {
 case .authorized:
@@ -73,7 +73,7 @@ case .denied:
 
 }
 
-var calendarIdentifier: String! = nil
+var calendarIdentifier: String? = nil
 for var c: EKCalendar in eventStore.calendars(for: EKEntityType.event) {
     if c.title == calendarName {
         calendarIdentifier = c.calendarIdentifier
@@ -82,7 +82,8 @@ for var c: EKCalendar in eventStore.calendars(for: EKEntityType.event) {
 }
 
 let calendar: EKCalendar
-if calendarIdentifier != nil, let cal = eventStore.calendar(withIdentifier: calendarIdentifier) {
+if let ci = calendarIdentifier,
+    let cal = eventStore.calendar(withIdentifier: ci) {
     calendar = cal
 } else {
     print("Calendar was not found")
