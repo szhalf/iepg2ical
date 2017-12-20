@@ -41,7 +41,7 @@ let searchPath = ("~/Downloads" as NSString).standardizingPath
 let n = searchPath.completePath(into: &outputName, caseSensitive: Bool(false), matchesInto: &outputArray, filterTypes: ["tvpi", "tvpid"])
 
 for path in outputArray {
-    if (path as NSString).pathExtension.characters.count > 0 {
+    if (path as NSString).pathExtension.count > 0 {
         filePaths.append(path)
     }
 }
@@ -74,7 +74,7 @@ case .denied:
 }
 
 var calendarIdentifier: String? = nil
-for var c: EKCalendar in eventStore.calendars(for: EKEntityType.event) {
+for c: EKCalendar in eventStore.calendars(for: EKEntityType.event) {
     if c.title == calendarName {
         calendarIdentifier = c.calendarIdentifier
         break
