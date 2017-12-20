@@ -55,8 +55,8 @@ class Utils {
 
         let range = string.range(of: delimiter)
         if range != nil {
-            key = string.substring(to: range!.lowerBound).trimmingCharacters(in: CharacterSet.whitespaces)
-            value = string.substring(from: range!.upperBound).trimmingCharacters(in: CharacterSet.whitespaces)
+            key   = string[..<range!.lowerBound].trimmingCharacters(in: CharacterSet.whitespaces)
+            value = string[range!.upperBound...].trimmingCharacters(in: CharacterSet.whitespaces)
         }
 
         return (key, value)
